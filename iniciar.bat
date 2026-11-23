@@ -1,7 +1,7 @@
 @echo off
-title StudyFlow - Servidor Local
+title APREVO - Plataforma de Gestao de Estudos
 echo ===================================================
-echo Iniciando StudyFlow em http://localhost:5173/
+echo Iniciando APREVO em http://localhost:5173/
 echo ===================================================
 start cmd /k "npx vite --port 5173 --host"
 timeout /t 2 /nobreak >nul
