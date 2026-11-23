@@ -6,23 +6,29 @@
   :root {
     --bg-main: #f8fafc;
     --surface-main: #ffffff;
+    --surface-card: #ffffff;
+    --surface-muted: #f1f5f9;
     --border-main: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
   }
 
   .dark {
     --bg-main: #090a0f;
-    --surface-main: #11131a;
+    --surface-main: #0c0e14;
+    --surface-card: #11131a;
+    --surface-muted: #161922;
     --border-main: #232836;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
   }
 
   body {
     background-color: var(--bg-main);
-    color: #f1f5f9;
+    color: var(--text-primary);
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  }
-
-  .dark body {
-    color: #e2e8f0;
   }
 
   /* Custom subtle scrollbar */
@@ -34,24 +40,29 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #334155;
+    background: #cbd5e1;
     border-radius: 9999px;
   }
+  .dark ::-webkit-scrollbar-thumb {
+    background: #334155;
+  }
   ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
     background: #475569;
   }
 }
 
 /* Glassmorphism & glow utility helpers */
 .glass-panel {
-  background: rgba(17, 19, 26, 0.75);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
-.light .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
+.dark .glass-panel {
+  background: rgba(17, 19, 26, 0.75);
 }
 
 @keyframes pulseSlow {
@@ -67,4 +78,128 @@
 
 .animate-pulse-slow {
   animation: pulseSlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* =========================================================================
+   LIGHT THEME ADAPTATION FOR HARMONIOUS LIGHT/DARK TOGGLE
+   ========================================================================= */
+
+html:not(.dark) body,
+html.light body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Header & Sidebar */
+html:not(.dark) aside,
+html.light aside,
+html:not(.dark) header,
+html.light header,
+html:not(.dark) nav,
+html.light nav {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Modal dialogs */
+html:not(.dark) .bg-\[\#11131a\],
+html.light .bg-\[\#11131a\],
+html:not(.dark) .bg-\[\#0c0e14\],
+html.light .bg-\[\#0c0e14\],
+html:not(.dark) .bg-\[\#0e1017\],
+html.light .bg-\[\#0e1017\],
+html:not(.dark) .bg-\[\#141722\],
+html.light .bg-\[\#141722\],
+html:not(.dark) .bg-\[\#141721\],
+html.light .bg-\[\#141721\],
+html:not(.dark) .bg-\[\#151322\],
+html.light .bg-\[\#151322\],
+html:not(.dark) .bg-\[\#151724\],
+html.light .bg-\[\#151724\],
+html:not(.dark) .bg-\[\#17142b\],
+html.light .bg-\[\#17142b\],
+html:not(.dark) .bg-\[\#18122c\],
+html.light .bg-\[\#18122c\] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Sub-panels, list items and secondary cards */
+html:not(.dark) .bg-\[\#161922\],
+html.light .bg-\[\#161922\],
+html:not(.dark) .bg-\[\#1c202c\],
+html.light .bg-\[\#1c202c\],
+html:not(.dark) .bg-\[\#202534\],
+html.light .bg-\[\#202534\] {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Borders */
+html:not(.dark) .border-\[\#232836\],
+html.light .border-\[\#232836\],
+html:not(.dark) .border-\[\#202534\],
+html.light .border-\[\#202534\],
+html:not(.dark) .border-\[\#242b3b\],
+html.light .border-\[\#242b3b\],
+html:not(.dark) .border-\[\#282f42\],
+html.light .border-\[\#282f42\],
+html:not(.dark) .border-\[\#2b3346\],
+html.light .border-\[\#2b3346\],
+html:not(.dark) .border-\[\#32394c\],
+html.light .border-\[\#32394c\] {
+  border-color: #e2e8f0 !important;
+}
+
+/* Text adjustments for light mode */
+html:not(.dark) .text-white,
+html.light .text-white {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .text-slate-100,
+html.light .text-slate-100,
+html:not(.dark) .text-slate-200,
+html.light .text-slate-200,
+html:not(.dark) .text-slate-300,
+html.light .text-slate-300 {
+  color: #1e293b !important;
+}
+
+html:not(.dark) .text-slate-400,
+html.light .text-slate-400 {
+  color: #475569 !important;
+}
+
+html:not(.dark) .text-slate-500,
+html.light .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* Form inputs & selects */
+html:not(.dark) input,
+html.light input,
+html:not(.dark) select,
+html.light select,
+html:not(.dark) textarea,
+html.light textarea {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) input::placeholder,
+html.light input::placeholder,
+html:not(.dark) textarea::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* SVG icons & charts in light mode */
+html:not(.dark) .recharts-cartesian-grid line,
+html.light .recharts-cartesian-grid line {
+  stroke: #e2e8f0 !important;
 }
