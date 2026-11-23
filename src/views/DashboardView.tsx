@@ -11,6 +11,7 @@ import {
   BookOpen,
   CheckCircle2,
   TrendingUp,
+  FolderKanban,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -171,6 +172,29 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
         <div className="absolute -top-16 -right-16 w-72 h-72 bg-brand-600/10 rounded-full blur-3xl pointer-events-none" />
       </div>
 
+      {/* Onboarding Callout if 0 subjects */}
+      {subjects.length === 0 && (
+        <div className="p-5 sm:p-6 rounded-2xl bg-[#131622] border border-brand-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-glow-sm">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-300 flex items-center justify-center shrink-0">
+              <FolderKanban className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-white">Cadastre sua primeira matéria</h4>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Para começar a registrar seus tempos e usar o cronômetro, crie as disciplinas que você está estudando.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setActiveTab('subjects')}
+            className="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold transition-all shadow-sm whitespace-nowrap active:scale-[0.98]"
+          >
+            + Criar Primeira Matéria
+          </button>
+        </div>
+      )}
+
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Hoje */}
@@ -240,7 +264,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
             <div className="text-base font-bold text-white tracking-tight truncate">
               {topSubject.name}
             </div>
-            <p className="text-xs text-slate-400 mt-1">{topSubject.totalFormatted} estudados</p>
+            <p className="text-xs text-slate-400 mt-1">
+              {topSubject.name === 'Nenhuma' ? 'Sem registros' : `${topSubject.totalFormatted} estudados`}
+            </p>
           </div>
         </div>
       </div>

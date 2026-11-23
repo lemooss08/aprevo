@@ -14,7 +14,7 @@ export const StudyModal: React.FC<StudyModalProps> = ({
   onClose,
   editingSession,
 }) => {
-  const { subjects, addSession, updateSession } = useApp();
+  const { subjects, addSession, updateSession, setActiveTab } = useApp();
 
   const [formSubjectId, setFormSubjectId] = useState<string>('');
   const [formTopic, setFormTopic] = useState<string>('');
@@ -76,7 +76,25 @@ export const StudyModal: React.FC<StudyModalProps> = ({
       title={editingSession ? 'Editar Registro de Estudo' : 'Registrar Conteúdo Estudado'}
       description="Salve os detalhes do que você estudou para manter seu histórico sempre atualizado"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {subjects.length === 0 ? (
+        <div className="text-center py-6 px-4 bg-[#161922] rounded-2xl border border-dashed border-[#282f42]">
+          <p className="text-sm font-semibold text-slate-200">Nenhuma matéria cadastrada</p>
+          <p className="text-xs text-slate-400 mt-1 mb-4">
+            Para registrar conteúdos estudados, primeiro crie sua primeira matéria ou disciplina.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              setActiveTab('subjects');
+            }}
+            className="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-sm transition-all"
+          >
+            + Cadastrar Primeira Matéria
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
         {/* Matéria */}
         <div>
           <label className="block text-xs font-semibold text-slate-300 mb-1.5">
@@ -172,6 +190,7 @@ export const StudyModal: React.FC<StudyModalProps> = ({
           </button>
         </div>
       </form>
+      )}
     </Modal>
   );
 };
