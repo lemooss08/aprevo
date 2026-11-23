@@ -236,7 +236,7 @@ export const ReviewsView: React.FC = () => {
             return (
               <div
                 key={rev.id}
-                className={`p-5 rounded-2xl border transition-all flex flex-col justify-between ${
+                className={`p-5 rounded-2xl border transition-all card-hover flex flex-col justify-between ${
                   isDueToday
                     ? 'bg-[#151322] border-brand-500/40 shadow-glow-sm'
                     : rev.status === 'completed'
@@ -324,7 +324,8 @@ export const ReviewsView: React.FC = () => {
                 <div className="mt-5 pt-3 border-t border-[#202534] flex items-center justify-between gap-2">
                   <button
                     onClick={() => deleteReview(rev.id)}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 transition-colors"
+                    aria-label="Excluir revisão"
+                    className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg text-slate-500 hover:text-rose-400 transition-colors"
                     title="Excluir"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -334,7 +335,7 @@ export const ReviewsView: React.FC = () => {
                     {rev.status !== 'completed' && (
                       <button
                         onClick={() => postponeReview(rev.id, 1)}
-                        className="px-2.5 py-1.5 rounded-lg bg-[#161922] hover:bg-[#202534] text-slate-300 text-xs font-medium border border-[#282f42] transition-colors"
+                        className="px-3 py-2 min-h-[38px] rounded-lg bg-[#161922] hover:bg-[#202534] text-slate-300 text-xs font-medium border border-[#282f42] transition-colors active:scale-[0.98]"
                       >
                         +1 Dia
                       </button>
@@ -343,7 +344,7 @@ export const ReviewsView: React.FC = () => {
                     {rev.status !== 'completed' ? (
                       <button
                         onClick={() => advanceReview(rev.id)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold transition-all shadow-sm"
+                        className="flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold transition-all shadow-sm active:scale-[0.98]"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         <span>Revisado</span>

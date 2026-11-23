@@ -37,7 +37,8 @@ export const MobileNav: React.FC<MobileNavProps> = ({ onOpenMenu }) => {
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
-            className={`flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-xl transition-all relative ${
+            aria-label={item.label}
+            className={`flex flex-col items-center justify-center flex-1 py-1 px-1 min-h-[44px] rounded-xl transition-all relative ${
               isActive ? 'text-brand-400 font-semibold' : 'text-slate-400 hover:text-slate-200'
             }`}
           >
@@ -60,7 +61,8 @@ export const MobileNav: React.FC<MobileNavProps> = ({ onOpenMenu }) => {
       {/* Menu / Mais */}
       <button
         onClick={onOpenMenu}
-        className="flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-xl text-slate-400 hover:text-slate-200 transition-all"
+        aria-label="Abrir menu de navegação"
+        className="flex flex-col items-center justify-center flex-1 py-1 px-1 min-h-[44px] rounded-xl text-slate-400 hover:text-slate-200 transition-all"
       >
         <Menu className="w-5 h-5" />
         <span className="text-[10px] mt-0.5 tracking-tight">Menu</span>

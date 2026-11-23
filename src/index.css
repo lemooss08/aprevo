@@ -29,6 +29,14 @@
     background-color: var(--bg-main);
     color: var(--text-primary);
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Universal accessible focus ring (WCAG 2.2 compliant) */
+  :focus-visible {
+    outline: 2px solid #8b5cf6;
+    outline-offset: 2px;
   }
 
   /* Custom subtle scrollbar */
@@ -65,6 +73,15 @@
   background: rgba(17, 19, 26, 0.75);
 }
 
+/* Card hover lift effect */
+.card-hover {
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease, border-color 200ms ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+}
+
+/* Pulse animation */
 @keyframes pulseSlow {
   0%, 100% {
     opacity: 1;
@@ -80,8 +97,23 @@
   animation: pulseSlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Respect user motion preferences (WCAG criterion) */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Safe area padding for mobile iPhones */
+.safe-bottom {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
 /* =========================================================================
-   LIGHT THEME REFINEMENT — NOTION & LINEAR MINIMALIST STYLE
+   LIGHT THEME ADAPTATION — NOTION & LINEAR MINIMALIST STYLE
    ========================================================================= */
 
 html:not(.dark) body,
@@ -90,7 +122,6 @@ html.light body {
   color: #0f172a !important;
 }
 
-/* Page background wrapper */
 html:not(.dark) .min-h-screen,
 html.light .min-h-screen {
   background-color: #f8fafc !important;
@@ -106,7 +137,7 @@ html.light aside {
 
 html:not(.dark) header,
 html.light header {
-  background-color: rgba(255, 255, 255, 0.92) !important;
+  background-color: rgba(255, 255, 255, 0.94) !important;
   border-bottom-color: #e2e8f0 !important;
   backdrop-filter: blur(12px) !important;
 }
@@ -114,11 +145,11 @@ html.light header {
 /* Mobile bottom nav */
 html:not(.dark) nav.fixed,
 html.light nav.fixed {
-  background-color: rgba(255, 255, 255, 0.96) !important;
+  background-color: rgba(255, 255, 255, 0.98) !important;
   border-top-color: #e2e8f0 !important;
 }
 
-/* Cards & Containers (Primary Surfaces) */
+/* Primary Cards */
 html:not(.dark) .bg-\[\#11131a\],
 html.light .bg-\[\#11131a\],
 html:not(.dark) .bg-\[\#0c0e14\],
@@ -141,7 +172,7 @@ html.light .bg-\[\#191114\] {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04) !important;
 }
 
-/* Banners (Dashboard hero, reviews, goals) in light mode */
+/* Hero Banners */
 html:not(.dark) .bg-gradient-to-r,
 html.light .bg-gradient-to-r,
 html:not(.dark) .bg-gradient-to-b,
@@ -150,7 +181,7 @@ html.light .bg-gradient-to-b {
   border-color: #ddd6fe !important;
 }
 
-/* Sub-panels, list cards, pills, inner elements */
+/* Sub-panels and pills */
 html:not(.dark) .bg-\[\#161922\],
 html.light .bg-\[\#161922\],
 html:not(.dark) .bg-\[\#1c202c\],
@@ -166,7 +197,7 @@ html.light .bg-\[\#201317\] {
   color: #1e293b !important;
 }
 
-/* Hover effects */
+/* Hover background */
 html:not(.dark) .hover\:bg-\[\#161922\]:hover,
 html.light .hover\:bg-\[\#161922\]:hover,
 html:not(.dark) .hover\:bg-\[\#1c202c\]:hover,
@@ -196,7 +227,7 @@ html.light .border-\[\#32394c\] {
   border-color: #e2e8f0 !important;
 }
 
-/* Text Hierarchy */
+/* Typography Hierarchy */
 html:not(.dark) .text-white,
 html.light .text-white {
   color: #0f172a !important;
@@ -216,15 +247,15 @@ html.light .text-slate-300 {
 
 html:not(.dark) .text-slate-400,
 html.light .text-slate-400 {
-  color: #64748b !important;
+  color: #475569 !important;
 }
 
 html:not(.dark) .text-slate-500,
 html.light .text-slate-500 {
-  color: #94a3b8 !important;
+  color: #64748b !important;
 }
 
-/* Brand Text Contrast */
+/* Brand Highlights */
 html:not(.dark) .text-brand-300,
 html.light .text-brand-300 {
   color: #6d28d9 !important;
@@ -235,7 +266,7 @@ html.light .text-brand-400 {
   color: #7c3aed !important;
 }
 
-/* Active navigation link in light mode */
+/* Active navigation link */
 html:not(.dark) .bg-brand-600\/15,
 html.light .bg-brand-600\/15,
 html:not(.dark) .bg-brand-500\/10,
@@ -280,7 +311,7 @@ html.light textarea::placeholder {
   color: #94a3b8 !important;
 }
 
-/* Recharts in Light Mode */
+/* Chart adjustments */
 html:not(.dark) .recharts-cartesian-grid line,
 html.light .recharts-cartesian-grid line {
   stroke: #e2e8f0 !important;
@@ -291,7 +322,6 @@ html.light .recharts-text {
   fill: #64748b !important;
 }
 
-/* Tooltip popup in Light Mode */
 html:not(.dark) .bg-\[\#0f1118\],
 html.light .bg-\[\#0f1118\] {
   background-color: #ffffff !important;
@@ -300,7 +330,7 @@ html.light .bg-\[\#0f1118\] {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Calendar heatmap empty cells in Light Mode */
+/* Heatmap empty cells */
 html:not(.dark) .bg-\[\#161922\].border,
 html.light .bg-\[\#161922\].border {
   background-color: #f1f5f9 !important;

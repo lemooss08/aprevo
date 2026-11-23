@@ -206,7 +206,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Hoje */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836]">
+        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836] card-hover">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Tempo Hoje</span>
             <div className="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center">
@@ -224,7 +224,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
         </div>
 
         {/* Card 2: Esta Semana */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836]">
+        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836] card-hover">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Esta Semana</span>
             <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
@@ -242,7 +242,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
         </div>
 
         {/* Card 3: Total Acumulado */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836]">
+        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836] card-hover">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Total de Horas</span>
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
@@ -258,7 +258,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
         </div>
 
         {/* Card 4: Matéria Principal */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836]">
+        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836] card-hover">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Disciplina Líder</span>
             <div

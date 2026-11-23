@@ -152,6 +152,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => (isTimerRunning ? pauseTimer() : resumeTimer())}
+              aria-label={isTimerRunning ? 'Pausar cronômetro' : 'Continuar cronômetro'}
               className="p-1 rounded-full hover:bg-brand-500/20 text-brand-300 hover:text-white transition-colors"
               title={isTimerRunning ? 'Pausar' : 'Continuar'}
             >
@@ -163,7 +164,8 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Quick New Study Button */}
         <button
           onClick={onOpenNewStudyModal}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-medium shadow-sm transition-all hover:shadow-glow-sm"
+          aria-label="Registrar novo estudo"
+          className="flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-medium shadow-sm transition-all hover:shadow-glow-sm active:scale-[0.98]"
         >
           <Plus className="w-4 h-4" />
           <span className="hidden sm:inline">Estudo</span>
@@ -172,7 +174,8 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#161922] transition-colors"
+          aria-label={settings.theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
+          className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-xl text-slate-400 hover:text-white hover:bg-[#161922] transition-colors"
           title={settings.theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
         >
           {settings.theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}

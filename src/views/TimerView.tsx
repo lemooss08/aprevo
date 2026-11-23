@@ -3,14 +3,13 @@ import { useApp } from '../context/AppContext';
 import {
   Play,
   Pause,
-  Square,
   RotateCcw,
   Sparkles,
-  BookOpen,
-  FileText,
   Clock,
-  Layers,
   CheckCircle2,
+  Zap,
+  Target,
+  Flame,
 } from 'lucide-react';
 import { formatSecondsToHMS, formatSecondsToHuman, formatTimeBR, isSameDay } from '../utils/formatters';
 
@@ -61,21 +60,29 @@ export const TimerView: React.FC = () => {
     setShowDiscardConfirm(false);
   };
 
+  const applyPreset = (presetName: string) => {
+    if (!topic.trim()) {
+      setTopic(presetName);
+    } else {
+      setTopic((prev) => `${prev} • ${presetName}`);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Timer Hero Card */}
       <div
-        className={`relative overflow-hidden rounded-3xl p-8 sm:p-12 border transition-all duration-500 text-center flex flex-col items-center justify-center ${
+        className={`relative overflow-hidden rounded-3xl p-8 sm:p-12 border transition-all duration-300 text-center flex flex-col items-center justify-center ${
           activeTimer
             ? isTimerRunning
-              ? 'bg-gradient-to-b from-[#141226] via-[#10111a] to-[#0c0e14] border-brand-500/40 shadow-glow'
-              : 'bg-[#11131a] border-amber-500/30 shadow-md'
-            : 'bg-[#11131a] border-[#232836]'
+              ? 'bg-gradient-to-b from-[#141226] via-[#10111a] to-[#0c0e14] border-brand-500/50 shadow-glow ring-4 ring-brand-500/10'
+              : 'bg-[#11131a] border-amber-500/30 shadow-md ring-2 ring-amber-500/10'
+            : 'bg-[#11131a] border-[#232836] shadow-sm'
         }`}
       >
         {/* Glow ambient background element */}
         {activeTimer && isTimerRunning && (
-          <div className="absolute inset-0 bg-brand-600/5 blur-2xl pointer-events-none" />
+          <div className="absolute inset-0 bg-brand-600/5 blur-3xl pointer-events-none" />
         )}
 
         {/* Status Indicator */}
@@ -93,8 +100,8 @@ export const TimerView: React.FC = () => {
               </span>
             )
           ) : (
-            <span className="flex items-center gap-2 bg-slate-800 text-slate-400 border border-slate-700/50 px-3 py-1 rounded-full">
-              <span className="w-2 h-2 rounded-full bg-slate-500" />
+            <span className="flex items-center gap-2 bg-[#161922] text-slate-400 border border-[#232836] px-3.5 py-1.5 rounded-full">
+              <span className="w-2 h-2 rounded-full bg-slate-400" />
               Pronto para Iniciar
             </span>
           )}
@@ -114,7 +121,7 @@ export const TimerView: React.FC = () => {
               {activeTimer.topic}
             </h3>
             {activeTimer.notes && (
-              <p className="text-xs text-slate-400 mt-1 italic max-w-md mx-auto line-clamp-2">
+              <p className="text-xs text-slate-400 mt-1.5 italic max-w-md mx-auto line-clamp-2">
                 "{activeTimer.notes}"
               </p>
             )}
@@ -131,13 +138,12 @@ export const TimerView: React.FC = () => {
         {/* Timer Control Buttons */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4 z-10">
           {!activeTimer ? (
-            /* When not started, anchor button to form below */
             <a
               href="#start-form"
-              className="flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-glow-sm hover:shadow-glow transition-all"
+              className="flex items-center gap-2 px-8 py-4 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-glow-sm hover:shadow-glow transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
             >
               <Play className="w-4 h-4 fill-current" />
-              Configurar e Iniciar
+              <span>Configurar e Iniciar Foco</span>
             </a>
           ) : (
             <>
@@ -145,34 +151,34 @@ export const TimerView: React.FC = () => {
               {isTimerRunning ? (
                 <button
                   onClick={pauseTimer}
-                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-md transition-all"
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-md transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
                 >
                   <Pause className="w-4 h-4 fill-current" />
-                  Pausar
+                  <span>Pausar</span>
                 </button>
               ) : (
                 <button
                   onClick={resumeTimer}
-                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-md transition-all"
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-md transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
                 >
                   <Play className="w-4 h-4 fill-current" />
-                  Continuar
+                  <span>Continuar</span>
                 </button>
               )}
 
               {/* Finish Session */}
               <button
                 onClick={handleFinish}
-                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-glow-sm transition-all"
+                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-glow-sm transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
               >
                 <CheckCircle2 className="w-4 h-4" />
-                Finalizar e Salvar
+                <span>Finalizar e Salvar</span>
               </button>
 
               {/* Discard Session */}
               <button
                 onClick={() => setShowDiscardConfirm(true)}
-                className="flex items-center gap-2 px-4 py-3.5 rounded-2xl bg-[#1c202c] hover:bg-rose-950/60 hover:text-rose-400 text-slate-400 border border-[#2a3042] font-semibold text-sm transition-all"
+                className="flex items-center gap-2 px-4 py-3.5 rounded-2xl bg-[#1c202c] hover:bg-rose-950/60 hover:text-rose-400 text-slate-400 border border-[#2a3042] font-semibold text-sm transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
                 title="Descartar sem salvar"
               >
                 <RotateCcw className="w-4 h-4" />
@@ -191,13 +197,13 @@ export const TimerView: React.FC = () => {
             <div className="flex items-center justify-center gap-3">
               <button
                 onClick={handleConfirmDiscard}
-                className="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold"
+                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold cursor-pointer active:scale-[0.98] min-h-[36px]"
               >
                 Sim, descartar
               </button>
               <button
                 onClick={() => setShowDiscardConfirm(false)}
-                className="px-4 py-1.5 rounded-lg bg-[#1c202c] hover:bg-[#252b3b] text-slate-300 text-xs font-medium"
+                className="px-4 py-2 rounded-lg bg-[#1c202c] hover:bg-[#252b3b] text-slate-300 text-xs font-medium cursor-pointer active:scale-[0.98] min-h-[36px]"
               >
                 Voltar
               </button>
@@ -208,18 +214,51 @@ export const TimerView: React.FC = () => {
 
       {/* Form Section: Start New Session (when inactive) */}
       {!activeTimer && (
-        <div id="start-form" className="p-6 sm:p-8 rounded-3xl bg-[#11131a] border border-[#232836]">
+        <div id="start-form" className="p-6 sm:p-8 rounded-3xl bg-[#11131a] border border-[#232836] shadow-sm">
           <div className="flex items-center gap-2.5 mb-6">
-            <div className="w-8 h-8 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center">
-              <Sparkles className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center">
+              <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-base font-bold text-white tracking-tight">
                 Iniciar Nova Sessão de Foco
               </h3>
               <p className="text-xs text-slate-400">
-                Preencha os detalhes do que vai estudar para acompanhar seu progresso
+                Preencha os detalhes do que vai estudar para acompanhar seu progresso no APREVO
               </p>
+            </div>
+          </div>
+
+          {/* Quick Preset Focus Modes */}
+          <div className="mb-5 p-3.5 rounded-2xl bg-[#161922] border border-[#232836]">
+            <span className="text-[11px] font-semibold text-slate-400 block mb-2 uppercase tracking-wider">
+              Modos Rápidos de Estudo (Clique para aplicar):
+            </span>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => applyPreset('Técnica Pomodoro (25m)')}
+                className="px-3 py-1.5 rounded-xl bg-[#202534] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#2b3346] transition-all cursor-pointer flex items-center gap-1.5"
+              >
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                <span>Pomodoro (25m)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => applyPreset('Deep Work (50m)')}
+                className="px-3 py-1.5 rounded-xl bg-[#202534] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#2b3346] transition-all cursor-pointer flex items-center gap-1.5"
+              >
+                <Target className="w-3.5 h-3.5 text-brand-400" />
+                <span>Deep Work (50m)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => applyPreset('Ultra Focus (90m)')}
+                className="px-3 py-1.5 rounded-xl bg-[#202534] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#2b3346] transition-all cursor-pointer flex items-center gap-1.5"
+              >
+                <Flame className="w-3.5 h-3.5 text-rose-400" />
+                <span>Ultra Focus (90m)</span>
+              </button>
             </div>
           </div>
 
@@ -228,7 +267,7 @@ export const TimerView: React.FC = () => {
               <p className="text-sm text-slate-300 font-medium">Você precisa cadastrar ao menos uma matéria.</p>
               <button
                 onClick={() => setActiveTab('subjects')}
-                className="mt-3 px-4 py-2 rounded-xl bg-brand-600 text-white text-xs font-semibold hover:bg-brand-500"
+                className="mt-3 px-4 py-2 rounded-xl bg-brand-600 text-white text-xs font-semibold hover:bg-brand-500 cursor-pointer"
               >
                 Cadastrar Matérias
               </button>
@@ -247,7 +286,7 @@ export const TimerView: React.FC = () => {
                       value={selectedSubjectId}
                       onChange={(e) => setSelectedSubjectId(e.target.value)}
                       required
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white focus:outline-none focus:border-brand-500 transition-colors"
+                      className="w-full px-3.5 py-3 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white focus:outline-none focus:border-brand-500 transition-colors"
                     >
                       {subjects.map((sub) => (
                         <option key={sub.id} value={sub.id}>
@@ -257,7 +296,7 @@ export const TimerView: React.FC = () => {
                     </select>
                     {selectedSubject && (
                       <span
-                        className="absolute right-9 top-3.5 w-3 h-3 rounded-full pointer-events-none"
+                        className="absolute right-9 top-4 w-3 h-3 rounded-full pointer-events-none"
                         style={{ backgroundColor: selectedSubject.color }}
                       />
                     )}
@@ -274,8 +313,8 @@ export const TimerView: React.FC = () => {
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     required
-                    placeholder="Ex: Resolução de Exercícios de Álgebra, Cap. 4..."
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors"
+                    placeholder="Ex: Resolução de Exercícios, Leitura do Cap. 4..."
+                    className="w-full px-3.5 py-3 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors"
                   />
                 </div>
               </div>
@@ -298,7 +337,7 @@ export const TimerView: React.FC = () => {
                 <button
                   type="submit"
                   disabled={!topic.trim()}
-                  className="w-full sm:w-auto px-8 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm shadow-glow-sm transition-all"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm shadow-glow-sm transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
                 >
                   Começar a Estudar Agora
                 </button>
@@ -309,14 +348,14 @@ export const TimerView: React.FC = () => {
       )}
 
       {/* Sessões Concluídas Hoje */}
-      <div className="p-6 rounded-3xl bg-[#11131a] border border-[#232836]">
+      <div className="p-6 rounded-3xl bg-[#11131a] border border-[#232836] shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-base font-bold text-white flex items-center gap-2">
               <Clock className="w-4 h-4 text-brand-400" />
               Sessões Realizadas Hoje
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-400 mt-0.5">
               Total hoje:{' '}
               <span className="font-semibold text-brand-300">
                 {formatSecondsToHuman(todayTotalSeconds)}
@@ -337,7 +376,7 @@ export const TimerView: React.FC = () => {
               return (
                 <div
                   key={s.id}
-                  className="p-3.5 rounded-xl bg-[#161922] border border-[#232836] flex items-center justify-between gap-4"
+                  className="p-3.5 rounded-xl bg-[#161922] border border-[#232836] flex items-center justify-between gap-4 card-hover"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <span

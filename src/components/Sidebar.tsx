@@ -109,6 +109,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* Mobile close button */}
             <button
               onClick={() => setIsMobileOpen(false)}
+              aria-label="Fechar menu"
               className="md:hidden text-slate-400 hover:text-white p-1 rounded-lg"
             >
               <X className="w-5 h-5" />
@@ -189,6 +190,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {/* Desktop collapse toggle */}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
+            aria-label={isCollapsed ? 'Expandir menu lateral' : 'Recolher menu lateral'}
             className="hidden md:flex w-full items-center justify-center gap-2 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#161922] transition-colors text-xs font-medium"
           >
             {isCollapsed ? (

@@ -150,6 +150,7 @@ export const CalendarView: React.FC = () => {
           <div className="flex items-center rounded-xl bg-[#161922] border border-[#282f42] p-0.5">
             <button
               onClick={prevMonth}
+              aria-label="Mês anterior"
               className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#202534] transition-colors"
               title="Mês anterior"
             >
@@ -157,6 +158,7 @@ export const CalendarView: React.FC = () => {
             </button>
             <button
               onClick={nextMonth}
+              aria-label="Próximo mês"
               className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#202534] transition-colors"
               title="Próximo mês"
             >
@@ -189,6 +191,7 @@ export const CalendarView: React.FC = () => {
               <button
                 key={idx}
                 onClick={() => setSelectedDay(item.date)}
+                aria-label={`Dia ${item.date.getDate()}${hasStudy ? `, ${formatSecondsToHuman(stats.totalSeconds)} estudados` : ''}`}
                 className={`relative min-h-[72px] sm:min-h-[96px] p-2 rounded-2xl border text-left transition-all flex flex-col justify-between ${
                   !item.isCurrentMonth
                     ? 'opacity-30 bg-[#0e1017] border-[#1c202c]'
