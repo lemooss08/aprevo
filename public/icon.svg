@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="128" fill="#0c0e14"/>
+  <rect x="16" y="16" width="480" height="480" rx="112" stroke="url(#borderGlow)" stroke-width="4" stroke-opacity="0.3"/>
+  <defs>
+    <linearGradient id="primaryGrad" x1="96" y1="416" x2="350" y2="96" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stopColor="#6d28d9"/>
+      <stop offset="50%" stopColor="#8b5cf6"/>
+      <stop offset="100%" stopColor="#c4b5fd"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="256" y1="220" x2="416" y2="416" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stopColor="#a78bfa"/>
+      <stop offset="100%" stopColor="#4c1d95"/>
+    </linearGradient>
+    <linearGradient id="borderGlow" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stopColor="#8b5cf6"/>
+      <stop offset="100%" stopColor="#1e1b4b"/>
+    </linearGradient>
+    <filter id="glow" x="50" y="50" width="412" height="412" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <!-- Stylized Geometric A -->
+  <g filter="url(#glow)">
+    <!-- Left Ascender -->
+    <path d="M120 400 L256 120 L296 120 L160 400 Z" fill="url(#primaryGrad)"/>
+    <!-- Right Ascender -->
+    <path d="M256 120 L392 400 L352 400 L236 160 Z" fill="url(#accentGrad)"/>
+    <!-- Crossbar / Progress Step -->
+    <path d="M180 290 L332 290 L316 324 L164 324 Z" fill="#ffffff" fill-opacity="0.95"/>
+  </g>
+</svg>
