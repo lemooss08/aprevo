@@ -4,7 +4,6 @@ import {
   LayoutDashboard,
   Timer,
   BookOpen,
-  RotateCcw,
   Calendar,
   FolderKanban,
   BarChart3,
@@ -34,22 +33,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
     activeTab,
     setActiveTab,
     isTimerRunning,
-    reviews,
     syncKey,
     syncStatus,
     setIsSyncModalOpen,
   } = useApp();
 
-  const todayStr = new Date().toISOString().slice(0, 10);
-  const pendingReviewsCount = reviews.filter(
-    (r) => r.status === 'pending' && r.nextReviewDate <= todayStr
-  ).length;
-
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'timer', label: 'Cronômetro', icon: Timer, hasLiveBadge: isTimerRunning },
     { id: 'studies', label: 'Meus Estudos', icon: BookOpen },
-    { id: 'reviews', label: 'Revisões', icon: RotateCcw, countBadge: pendingReviewsCount },
     { id: 'calendar', label: 'Calendário', icon: Calendar },
     { id: 'subjects', label: 'Matérias', icon: FolderKanban },
     { id: 'stats', label: 'Estatísticas', icon: BarChart3 },
@@ -145,13 +137,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                   {(!isCollapsed || isMobileOpen) && (
                     <span className="flex-1 text-left tracking-tight truncate">{item.label}</span>
-                  )}
-
-                  {/* Review pending count badge */}
-                  {(!isCollapsed || isMobileOpen) && item.countBadge && item.countBadge > 0 && (
-                    <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                      {item.countBadge}
-                    </span>
                   )}
 
                   {(!isCollapsed || isMobileOpen) && item.hasLiveBadge && (

@@ -9,7 +9,6 @@ import { SyncModal } from './components/SyncModal';
 import { DashboardView } from './views/DashboardView';
 import { TimerView } from './views/TimerView';
 import { StudyLogsView } from './views/StudyLogsView';
-import { ReviewsView } from './views/ReviewsView';
 import { CalendarView } from './views/CalendarView';
 import { SubjectsView } from './views/SubjectsView';
 import { StatsView } from './views/StatsView';
@@ -47,7 +46,6 @@ const MainLayout: React.FC = () => {
           {activeTab === 'studies' && (
             <StudyLogsView onOpenCreate={() => setIsCreateStudyModalOpen(true)} />
           )}
-          {activeTab === 'reviews' && <ReviewsView />}
           {activeTab === 'calendar' && <CalendarView />}
           {activeTab === 'subjects' && <SubjectsView />}
           {activeTab === 'stats' && <StatsView />}

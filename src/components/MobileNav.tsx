@@ -4,7 +4,7 @@ import {
   LayoutDashboard,
   Timer,
   BookOpen,
-  RotateCcw,
+  Calendar,
   Menu,
 } from 'lucide-react';
 
@@ -13,18 +13,13 @@ interface MobileNavProps {
 }
 
 export const MobileNav: React.FC<MobileNavProps> = ({ onOpenMenu }) => {
-  const { activeTab, setActiveTab, isTimerRunning, reviews } = useApp();
-
-  const todayStr = new Date().toISOString().slice(0, 10);
-  const pendingReviewsCount = reviews.filter(
-    (r) => r.status === 'pending' && r.nextReviewDate <= todayStr
-  ).length;
+  const { activeTab, setActiveTab, isTimerRunning } = useApp();
 
   const items = [
     { id: 'dashboard', label: 'Início', icon: LayoutDashboard },
     { id: 'timer', label: 'Foco', icon: Timer, hasBadge: isTimerRunning },
     { id: 'studies', label: 'Estudos', icon: BookOpen },
-    { id: 'reviews', label: 'Revisões', icon: RotateCcw, countBadge: pendingReviewsCount },
+    { id: 'calendar', label: 'Calendário', icon: Calendar },
   ];
 
   return (
@@ -47,11 +42,6 @@ export const MobileNav: React.FC<MobileNavProps> = ({ onOpenMenu }) => {
               {item.hasBadge && (
                 <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
               )}
-              {item.countBadge && item.countBadge > 0 ? (
-                <span className="absolute -top-1.5 -right-2 px-1 py-0.2 rounded-full bg-amber-500 text-[9px] font-bold text-slate-950">
-                  {item.countBadge}
-                </span>
-              ) : null}
             </div>
             <span className="text-[10px] mt-0.5 tracking-tight">{item.label}</span>
           </button>

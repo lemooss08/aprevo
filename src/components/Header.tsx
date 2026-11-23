@@ -48,8 +48,6 @@ export const Header: React.FC<HeaderProps> = ({
         return { title: 'Cronômetro de Foco', desc: 'Registre suas sessões de estudo em tempo real' };
       case 'studies':
         return { title: 'Meus Estudos', desc: 'Histórico completo, filtros e anotações dos conteúdos' };
-      case 'reviews':
-        return { title: 'Revisões Espaçadas', desc: 'Curva do esquecimento e retenção permanente de conteúdos' };
       case 'calendar':
         return { title: 'Calendário de Estudos', desc: 'Acompanhamento diário e mapa de consistência mensal' };
       case 'subjects':

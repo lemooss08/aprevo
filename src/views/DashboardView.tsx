@@ -9,7 +9,6 @@ import {
   ArrowUpRight,
   Sparkles,
   BookOpen,
-  RotateCcw,
   CheckCircle2,
   TrendingUp,
 } from 'lucide-react';
@@ -35,7 +34,7 @@ interface DashboardViewProps {
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) => {
-  const { sessions, subjects, settings, reviews, setActiveTab, syncKey, setIsSyncModalOpen } = useApp();
+  const { sessions, subjects, settings, setActiveTab, syncKey, setIsSyncModalOpen } = useApp();
 
   const now = new Date();
   const startOfWeek = getStartOfWeek(now);
@@ -74,12 +73,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
   const dailyGoalSeconds = settings.dailyGoalMinutes * 60;
   const goalPercentage = dailyGoalSeconds > 0 ? Math.min(100, Math.round((todaySeconds / dailyGoalSeconds) * 100)) : 0;
   const goalMet = todaySeconds >= dailyGoalSeconds && dailyGoalSeconds > 0;
-
-  // Pending reviews due today
-  const todayStr = now.toISOString().slice(0, 10);
-  const pendingReviewsToday = reviews.filter(
-    (r) => r.status === 'pending' && r.nextReviewDate <= todayStr
-  );
 
   // 7-day chart data
   const last7DaysData = Array.from({ length: 7 }).map((_, index) => {
@@ -177,31 +170,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
         {/* Ambient decorative glow */}
         <div className="absolute -top-16 -right-16 w-72 h-72 bg-brand-600/10 rounded-full blur-3xl pointer-events-none" />
       </div>
-
-      {/* Alerta Inteligente de Revisões Espaçadas */}
-      {pendingReviewsToday.length > 0 && (
-        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-              <RotateCcw className="w-4 h-4" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-white">
-                {pendingReviewsToday.length} {pendingReviewsToday.length === 1 ? 'revisão programada' : 'revisões programadas'} para hoje!
-              </h4>
-              <p className="text-[11px] text-amber-200/80">
-                Fixe o conteúdo na memória antes que a curva do esquecimento atue.
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => setActiveTab('reviews')}
-            className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-colors whitespace-nowrap"
-          >
-            Revisar Agora
-          </button>
-        </div>
-      )}
 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
