@@ -20,7 +20,7 @@ O APREVO é uma aplicação web (PWA) para organizar, acompanhar e evoluir nos e
 
 ## Firebase
 
-Sem as variáveis do Firebase, o Aprevo abre em modo local e continua usando os estudos deste navegador.
+O domínio de produção `aprevo.vercel.app` usa o projeto Firebase `aprevo-1e150`. Em outros domínios, o Aprevo abre em modo local quando as variáveis do Firebase estão ausentes.
 
 1. No console do Firebase, crie ou selecione um projeto e registre um aplicativo Web.
 2. Em Authentication, habilite o provedor E-mail/senha. O Aprevo usa internamente um endereço sintético derivado do nome de usuário. O cadastro pede apenas usuário e senha, sem recuperação por e-mail.
