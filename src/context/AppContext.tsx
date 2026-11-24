@@ -5,12 +5,10 @@ import {
   UserSettings,
   ActiveTimerState,
   ToastMessage,
-  ReviewItem,
   SyncStatus,
-  SyncPayload,
 } from '../types';
 import { storageService, DEFAULT_SETTINGS } from '../services/storage';
-import { syncService, generatePairingCode, mergeSyncData } from '../services/syncService';
+import { syncService, generatePairingCode, getSyncEndpoint, isPairingCode, mergeSyncData } from '../services/syncService';
 import { playStartChime, playCompletionChime } from '../utils/audio';
 
 interface AppContextType {
@@ -21,7 +19,6 @@ interface AppContextType {
   // Data
   subjects: Subject[];
   sessions: StudySession[];
-  reviews: ReviewItem[];
   settings: UserSettings;
 
   // Subject actions
@@ -33,12 +30,6 @@ interface AppContextType {
   addSession: (session: Omit<StudySession, 'id'>) => StudySession;
   updateSession: (id: string, session: Partial<StudySession>) => void;
   deleteSession: (id: string) => void;
-
-  // Review actions (Spaced Repetition)
-  addReview: (subjectId: string, topic: string, notes?: string, intervals?: number[]) => ReviewItem;
-  advanceReview: (id: string) => void;
-  postponeReview: (id: string, days?: number) => void;
-  deleteReview: (id: string) => void;
 
   // Settings
   updateSettings: (newSettings: Partial<UserSettings>) => void;
@@ -62,7 +53,7 @@ interface AppContextType {
   lastSyncTime: Date | null;
   isSyncModalOpen: boolean;
   setIsSyncModalOpen: (val: boolean) => void;
-  setupDeviceSyncKey: () => string;
+  setupDeviceSyncKey: () => Promise<void>;
   connectExistingSyncKey: (key: string) => Promise<boolean>;
   disconnectDeviceSync: () => void;
   forceSyncNow: () => Promise<void>;
@@ -79,7 +70,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [subjects, setSubjects] = useState<Subject[]>(() => storageService.getSubjects());
   const [sessions, setSessions] = useState<StudySession[]>(() => storageService.getSessions());
-  const [reviews, setReviews] = useState<ReviewItem[]>(() => storageService.getReviews());
   const [settings, setSettings] = useState<UserSettings>(() => storageService.getSettings());
 
   // Timer states
@@ -99,7 +89,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   // Sync states
-  const [syncKey, setSyncKey] = useState<string | null>(() => storageService.getSyncKey());
+  const [syncKey, setSyncKey] = useState<string | null>(() => {
+    const saved = storageService.getSyncKey();
+    return saved && isPairingCode(saved) ? saved : null;
+  });
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle');
   const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
   const [isSyncModalOpen, setIsSyncModalOpen] = useState<boolean>(false);
@@ -131,29 +124,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [settings.theme]);
 
-  // Online / Offline window listeners
-  useEffect(() => {
-    const handleOnline = () => {
-      if (syncKey) {
-        setSyncStatus('idle');
-        addToast('Conexão restabelecida', 'Sincronizando com a nuvem...', 'info');
-        triggerCloudSync();
-      }
-    };
-    const handleOffline = () => {
-      setSyncStatus('offline');
-      addToast('Modo Offline', 'Seus dados continuam salvos localmente no dispositivo.', 'info');
-    };
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, [syncKey]);
-
   // Timer tick interval effect
   const timerRef = useRef<number | null>(null);
 
@@ -179,131 +149,101 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   }, [isTimerRunning, activeTimer]);
 
-  // Sync: Push and Pull Logic
-  const syncTimeoutRef = useRef<number | null>(null);
+  const syncRequest = useRef<AbortController | null>(null);
+  const scheduledSync = useRef<number | undefined>(undefined);
 
-  const scheduleCloudPush = useCallback(() => {
-    if (!syncKey) return;
+  const exchange = useCallback(async (key: string, mode: 'create' | 'join' | 'sync') => {
+    if (syncRequest.current) return false;
     if (!navigator.onLine) {
       setSyncStatus('offline');
-      return;
+      return false;
     }
+    const request = new AbortController();
+    syncRequest.current = request;
+    setSyncStatus('syncing');
 
-    if (syncTimeoutRef.current) {
-      clearTimeout(syncTimeoutRef.current);
-    }
-
-    syncTimeoutRef.current = window.setTimeout(async () => {
-      setSyncStatus('syncing');
-      const payload: SyncPayload = {
-        syncKey,
-        timestamp: Date.now(),
-        version: 1,
-        data: {
-          subjects,
-          sessions,
-          reviews,
-          settings,
-        },
-      };
-
-      const ok = await syncService.pushToCloud(payload);
-      if (ok) {
-        setSyncStatus('synced');
-        setLastSyncTime(new Date());
-      } else {
-        setSyncStatus('error');
+    try {
+      const data = await syncService.exchange(key, () => storageService.getSyncData(), mode, request.signal);
+      if (request.signal.aborted) return false;
+      const merged = mergeSyncData(storageService.getSyncData(), data);
+      if (merged.hasChanges) {
+        storageService.saveSubjects(merged.subjects);
+        storageService.saveSessions(merged.sessions);
+        storageService.saveSettings(merged.settings);
+        storageService.saveDeletedIds(merged.deletedIds ?? []);
+        setSubjects(merged.subjects);
+        setSessions(merged.sessions);
+        setSettings(merged.settings);
       }
-    }, 1500);
-  }, [syncKey, subjects, sessions, reviews, settings]);
+      storageService.saveSyncKey(key);
+      setSyncKey(key);
+      setLastSyncTime(new Date());
+      setSyncStatus('synced');
+      return true;
+    } catch {
+      if (!request.signal.aborted) setSyncStatus('error');
+      return false;
+    } finally {
+      if (syncRequest.current === request) syncRequest.current = null;
+    }
+  }, []);
 
   const triggerCloudSync = useCallback(async () => {
-    if (!syncKey) return;
-    if (!navigator.onLine) {
-      setSyncStatus('offline');
-      return;
-    }
+    const key = storageService.getSyncKey();
+    if (key && isPairingCode(key)) await exchange(key, 'sync');
+  }, [exchange]);
 
-    setSyncStatus('syncing');
-    const remote = await syncService.pullFromCloud(syncKey);
-
-    if (remote && remote.data) {
-      const merged = mergeSyncData(
-        { subjects, sessions, reviews, settings },
-        remote.data
-      );
-
-      if (merged.hasChanges) {
-        setSubjects(merged.subjects);
-        storageService.saveSubjects(merged.subjects);
-
-        setSessions(merged.sessions);
-        storageService.saveSessions(merged.sessions);
-
-        setReviews(merged.reviews);
-        storageService.saveReviews(merged.reviews);
-
-        setSettings(merged.settings);
-        storageService.saveSettings(merged.settings);
-
-        addToast('Dados Sincronizados', 'Atualizado com alterações de outro dispositivo.', 'info');
+  const scheduleCloudPush = () => {
+    if (!syncKey && !syncRequest.current) return;
+    window.clearTimeout(scheduledSync.current);
+    const flush = () => {
+      if (syncRequest.current) {
+        scheduledSync.current = window.setTimeout(flush, 1200);
+      } else {
+        void triggerCloudSync();
       }
-    }
-
-    // Now push current merged state to cloud
-    const currentPayload: SyncPayload = {
-      syncKey,
-      timestamp: Date.now(),
-      version: 1,
-      data: {
-        subjects,
-        sessions,
-        reviews,
-        settings,
-      },
     };
+    scheduledSync.current = window.setTimeout(flush, 1200);
+  };
 
-    const pushOk = await syncService.pushToCloud(currentPayload);
-    if (pushOk) {
-      setSyncStatus('synced');
-      setLastSyncTime(new Date());
-    } else {
-      setSyncStatus('error');
-    }
-  }, [syncKey, subjects, sessions, reviews, settings, addToast]);
-
-  // Periodic pull from cloud (every 25 seconds if active tab)
   useEffect(() => {
-    if (!syncKey) return;
-
-    const interval = setInterval(() => {
-      if (document.visibilityState === 'visible' && navigator.onLine) {
-        triggerCloudSync();
-      }
-    }, 25000);
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && navigator.onLine) {
-        triggerCloudSync();
-      }
+    const syncWhenVisible = () => {
+      if (document.visibilityState === 'visible' && navigator.onLine) void triggerCloudSync();
     };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    const handleOffline = () => setSyncStatus('offline');
+    const interval = window.setInterval(syncWhenVisible, 25000);
+    document.addEventListener('visibilitychange', syncWhenVisible);
+    window.addEventListener('online', triggerCloudSync);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
-      clearInterval(interval);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.clearInterval(interval);
+      window.clearTimeout(scheduledSync.current);
+      syncRequest.current?.abort();
+      syncRequest.current = null;
+      document.removeEventListener('visibilitychange', syncWhenVisible);
+      window.removeEventListener('online', triggerCloudSync);
+      window.removeEventListener('offline', handleOffline);
     };
-  }, [syncKey, triggerCloudSync]);
+  }, [triggerCloudSync]);
 
-  // Check URL query on initial load for automatic pairing link (e.g. ?sync=APRV-XXXX)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const urlSyncKey = params.get('sync');
-    if (urlSyncKey && urlSyncKey.startsWith('APRV-') && urlSyncKey !== syncKey) {
-      connectExistingSyncKey(urlSyncKey);
-      // Clean query parameter from URL without reload
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
+    let active = true;
+    queueMicrotask(() => {
+      if (!active) return;
+      const url = new URL(window.location.href);
+      const fragment = new URLSearchParams(url.hash.slice(1));
+      const key = fragment.get('sync') ?? url.searchParams.get('sync');
+      if (!key) return;
+      if (fragment.has('sync')) {
+        fragment.delete('sync');
+        url.hash = fragment.toString();
+      }
+      url.searchParams.delete('sync');
+      window.history.replaceState(window.history.state, '', url);
+      if (key !== storageService.getSyncKey()) void connectExistingSyncKey(key);
+    });
+    return () => { active = false; };
   }, []);
 
   // Subject actions
@@ -317,7 +257,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: now,
       updatedAt: now,
     };
-    const updated = [...subjects, newSubject];
+    const updated = [...storageService.getSubjects(), newSubject];
     setSubjects(updated);
     storageService.saveSubjects(updated);
     scheduleCloudPush();
@@ -327,7 +267,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const updateSubject = (id: string, name: string, color: string, description?: string) => {
     const now = new Date().toISOString();
-    const updated = subjects.map((s) =>
+    const updated = storageService.getSubjects().map((s) =>
       s.id === id ? { ...s, name: name.trim(), color, description: description?.trim(), updatedAt: now } : s
     );
     setSubjects(updated);
@@ -337,8 +277,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteSubject = (id: string) => {
+    storageService.saveDeletedIds([...new Set([...storageService.getDeletedIds(), id])]);
     const target = subjects.find((s) => s.id === id);
-    const updated = subjects.filter((s) => s.id !== id);
+    const updated = storageService.getSubjects().filter((s) => s.id !== id);
     setSubjects(updated);
     storageService.saveSubjects(updated);
     scheduleCloudPush();
@@ -353,7 +294,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       id: `sess-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       updatedAt: now,
     };
-    const updated = [newSession, ...sessions];
+    const updated = [newSession, ...storageService.getSessions()];
     setSessions(updated);
     storageService.saveSessions(updated);
     scheduleCloudPush();
@@ -363,7 +304,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const updateSession = (id: string, sessionData: Partial<StudySession>) => {
     const now = new Date().toISOString();
-    const updated = sessions.map((s) => (s.id === id ? { ...s, ...sessionData, updatedAt: now } : s));
+    const updated = storageService.getSessions().map((s) => (s.id === id ? { ...s, ...sessionData, updatedAt: now } : s));
     setSessions(updated);
     storageService.saveSessions(updated);
     scheduleCloudPush();
@@ -371,109 +312,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteSession = (id: string) => {
-    const updated = sessions.filter((s) => s.id !== id);
+    storageService.saveDeletedIds([...new Set([...storageService.getDeletedIds(), id])]);
+    const updated = storageService.getSessions().filter((s) => s.id !== id);
     setSessions(updated);
     storageService.saveSessions(updated);
     scheduleCloudPush();
     addToast('Registro excluído', 'A sessão foi removida.', 'info');
   };
 
-  // Review Actions (Spaced Repetition)
-  const addReview = (
-    subjectId: string,
-    topic: string,
-    notes?: string,
-    intervals: number[] = [1, 3, 7, 15, 30]
-  ): ReviewItem => {
-    const now = new Date();
-    const firstInterval = intervals[0] || 1;
-    const nextDate = new Date(now.getTime() + firstInterval * 86400000).toISOString().slice(0, 10);
-
-    const newReview: ReviewItem = {
-      id: `rev-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      subjectId,
-      topic: topic.trim(),
-      stage: 0,
-      intervals,
-      nextReviewDate: nextDate,
-      notes: notes?.trim(),
-      createdAt: now.toISOString(),
-      status: 'pending',
-      updatedAt: now.toISOString(),
-    };
-
-    const updated = [newReview, ...reviews];
-    setReviews(updated);
-    storageService.saveReviews(updated);
-    scheduleCloudPush();
-    addToast('Revisão agendada', `Primeira revisão de "${topic}" agendada para ${firstInterval} dia(s).`);
-    return newReview;
-  };
-
-  const advanceReview = (id: string) => {
-    const target = reviews.find((r) => r.id === id);
-    if (!target) return;
-
-    const nextStage = target.stage + 1;
-    const now = new Date();
-    const isCompleted = nextStage >= target.intervals.length;
-
-    let nextDate = target.nextReviewDate;
-    if (!isCompleted) {
-      const nextInterval = target.intervals[nextStage];
-      nextDate = new Date(now.getTime() + nextInterval * 86400000).toISOString().slice(0, 10);
-    }
-
-    const updated = reviews.map((r) =>
-      r.id === id
-        ? {
-            ...r,
-            stage: nextStage,
-            status: isCompleted ? ('completed' as const) : ('pending' as const),
-            nextReviewDate: nextDate,
-            lastReviewedAt: now.toISOString(),
-            updatedAt: now.toISOString(),
-          }
-        : r
-    );
-
-    setReviews(updated);
-    storageService.saveReviews(updated);
-    scheduleCloudPush();
-
-    if (isCompleted) {
-      playCompletionChime();
-      addToast('Ciclo de Revisão Concluído!', `"${target.topic}" foi fixado com sucesso!`, 'success');
-    } else {
-      addToast('Revisão Registrada', `Próxima revisão em ${target.intervals[nextStage]} dia(s).`, 'info');
-    }
-  };
-
-  const postponeReview = (id: string, days: number = 1) => {
-    const now = new Date();
-    const newDate = new Date(now.getTime() + days * 86400000).toISOString().slice(0, 10);
-
-    const updated = reviews.map((r) =>
-      r.id === id ? { ...r, nextReviewDate: newDate, updatedAt: now.toISOString() } : r
-    );
-
-    setReviews(updated);
-    storageService.saveReviews(updated);
-    scheduleCloudPush();
-    addToast('Revisão adiada', `Reagendada para daqui a ${days} dia(s).`, 'info');
-  };
-
-  const deleteReview = (id: string) => {
-    const updated = reviews.filter((r) => r.id !== id);
-    setReviews(updated);
-    storageService.saveReviews(updated);
-    scheduleCloudPush();
-    addToast('Revisão removida', 'Item de revisão excluído.', 'info');
-  };
-
   // Settings & Data actions
   const updateSettings = (newSettings: Partial<UserSettings>) => {
-    const updated = { ...settings, ...newSettings };
+    const updated = { ...storageService.getSettings(), ...newSettings, updatedAt: new Date().toISOString() };
     setSettings(updated);
     storageService.saveSettings(updated);
     scheduleCloudPush();
@@ -481,13 +330,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const resetAllData = () => {
+    cancelSync();
     storageService.clearAllData();
     setSubjects(storageService.getSubjects());
     setSessions(storageService.getSessions());
-    setReviews(storageService.getReviews());
     setSettings(DEFAULT_SETTINGS);
     setSyncKey(null);
     setSyncStatus('idle');
+    setLastSyncTime(null);
     setActiveTimer(null);
     setIsTimerRunning(false);
     setTimerSeconds(0);
@@ -512,103 +362,49 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // Sync methods
-  const setupDeviceSyncKey = (): string => {
-    const key = generatePairingCode();
-    setSyncKey(key);
-    storageService.saveSyncKey(key);
-
-    const payload: SyncPayload = {
-      syncKey: key,
-      timestamp: Date.now(),
-      version: 1,
-      data: {
-        subjects,
-        sessions,
-        reviews,
-        settings,
-      },
-    };
-
-    setSyncStatus('syncing');
-    syncService.pushToCloud(payload).then((ok) => {
-      setSyncStatus(ok ? 'synced' : 'error');
-      if (ok) setLastSyncTime(new Date());
-    });
-
-    addToast('Código de Pareamento Criado', `Use o código ${key} no outro dispositivo.`);
-    return key;
+  const setupDeviceSyncKey = async () => {
+    if (!getSyncEndpoint()) {
+      addToast('Banco de sincronização ausente', 'Informe o endpoint do Firebase em Configurações.', 'error');
+      return;
+    }
+    try {
+      const key = generatePairingCode();
+      if (await exchange(key, 'create')) {
+        addToast('Código de pareamento criado', 'Use o código no outro dispositivo.');
+        return;
+      }
+    } catch {
+      setSyncStatus('error');
+    }
+    addToast('Falha ao criar o código', 'Verifique a conexão e tente novamente.', 'error');
   };
 
   const connectExistingSyncKey = async (key: string): Promise<boolean> => {
     const cleanKey = key.trim().toUpperCase();
-    if (!cleanKey) return false;
-
-    setSyncStatus('syncing');
-    const remote = await syncService.pullFromCloud(cleanKey);
-
-    if (remote && remote.data) {
-      const merged = mergeSyncData(
-        { subjects, sessions, reviews, settings },
-        remote.data
-      );
-
-      setSubjects(merged.subjects);
-      storageService.saveSubjects(merged.subjects);
-
-      setSessions(merged.sessions);
-      storageService.saveSessions(merged.sessions);
-
-      setReviews(merged.reviews);
-      storageService.saveReviews(merged.reviews);
-
-      setSettings(merged.settings);
-      storageService.saveSettings(merged.settings);
-
-      setSyncKey(cleanKey);
-      storageService.saveSyncKey(cleanKey);
-      setSyncStatus('synced');
-      setLastSyncTime(new Date());
-
-      // Push combined data back to cloud
-      syncService.pushToCloud({
-        syncKey: cleanKey,
-        timestamp: Date.now(),
-        version: 1,
-        data: {
-          subjects: merged.subjects,
-          sessions: merged.sessions,
-          reviews: merged.reviews,
-          settings: merged.settings,
-        },
-      });
-
-      addToast('Dispositivo Conectado com Sucesso!', 'Dados sincronizados entre seus dispositivos.', 'success');
-      return true;
-    } else {
-      // If no remote yet, set sync key and push current data
-      setSyncKey(cleanKey);
-      storageService.saveSyncKey(cleanKey);
-
-      await syncService.pushToCloud({
-        syncKey: cleanKey,
-        timestamp: Date.now(),
-        version: 1,
-        data: {
-          subjects,
-          sessions,
-          reviews,
-          settings,
-        },
-      });
-
-      setSyncStatus('synced');
-      setLastSyncTime(new Date());
-      addToast('Dispositivo Pareado', `Espaço de sincronização ${cleanKey} ativo.`, 'success');
-      return true;
+    if (!isPairingCode(cleanKey)) {
+      addToast('Código incompatível', 'Gere um código novo no outro dispositivo.', 'error');
+      return false;
     }
+    if (!getSyncEndpoint()) {
+      addToast('Banco de sincronização ausente', 'Configure o mesmo endpoint do outro dispositivo.', 'error');
+      return false;
+    }
+    if (!await exchange(cleanKey, 'join')) {
+      addToast('Não foi possível parear', 'Confira o código, o banco configurado e a conexão.', 'error');
+      return false;
+    }
+    addToast('Dispositivo conectado', 'Dados sincronizados entre seus dispositivos.');
+    return true;
+  };
+
+  const cancelSync = () => {
+    window.clearTimeout(scheduledSync.current);
+    syncRequest.current?.abort();
+    syncRequest.current = null;
   };
 
   const disconnectDeviceSync = () => {
+    cancelSync();
     setSyncKey(null);
     storageService.saveSyncKey(null);
     setSyncStatus('idle');
@@ -618,7 +414,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const forceSyncNow = async () => {
     if (!syncKey) {
-      setupDeviceSyncKey();
+      await setupDeviceSyncKey();
       return;
     }
     await triggerCloudSync();
@@ -717,7 +513,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       updatedAt: now,
     };
 
-    const updatedSessions = [savedSession, ...sessions];
+    const updatedSessions = [savedSession, ...storageService.getSessions()];
     setSessions(updatedSessions);
     storageService.saveSessions(updatedSessions);
 
@@ -747,7 +543,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setActiveTab,
         subjects,
         sessions,
-        reviews,
         settings,
         addSubject,
         updateSubject,
@@ -755,10 +550,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addSession,
         updateSession,
         deleteSession,
-        addReview,
-        advanceReview,
-        postponeReview,
-        deleteReview,
         updateSettings,
         resetAllData,
         exportDataCSV,

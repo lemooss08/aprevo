@@ -1,49 +1,33 @@
-import { Subject, StudySession, ReviewItem, UserSettings, SyncPayload, SyncStatus } from '../types';
+import { SyncData, Subject, StudySession } from '../types';
 import { storageService } from './storage';
 
-const DEFAULT_FIREBASE_RTDB = 'https://aprevo-sync-default-rtdb.firebaseio.com';
+const encoder = new TextEncoder();
+
+export const getSyncEndpoint = () =>
+  storageService.getCustomSyncEndpoint() || import.meta.env.VITE_SYNC_ENDPOINT?.trim() || '';
+
+const toHex = (bytes: Uint8Array) =>
+  Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('').toUpperCase();
+
+export const isPairingCode = (code: string) => /^APRV3-[0-9A-F]{32}$/.test(code);
 
 export function generatePairingCode(): string {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let part1 = '';
-  for (let i = 0; i < 4; i++) {
-    part1 += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  let part2 = '';
-  for (let i = 0; i < 2; i++) {
-    part2 += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return `APRV-${part1}-${part2}`;
+  return `APRV3-${toHex(crypto.getRandomValues(new Uint8Array(16)))}`;
 }
 
-export interface SyncMergeResult {
-  subjects: Subject[];
-  sessions: StudySession[];
-  reviews: ReviewItem[];
-  settings: UserSettings;
+export interface SyncMergeResult extends SyncData {
   hasChanges: boolean;
 }
 
-export function mergeSyncData(
-  local: {
-    subjects: Subject[];
-    sessions: StudySession[];
-    reviews: ReviewItem[];
-    settings: UserSettings;
-  },
-  remote: {
-    subjects: Subject[];
-    sessions: StudySession[];
-    reviews: ReviewItem[];
-    settings: UserSettings;
-  }
-): SyncMergeResult {
-  let hasChanges = false;
+export function mergeSyncData(local: SyncData, remote: SyncData): SyncMergeResult {
+  const deleted = new Set([...(local.deletedIds ?? []), ...(remote.deletedIds ?? [])]);
+  let hasChanges = deleted.size !== (local.deletedIds?.length ?? 0);
 
-  // Merge Subjects by ID
+  // Merge Subjects by ID (Union with latest updatedAt winning)
   const subjectMap = new Map<string, Subject>();
   local.subjects.forEach((s) => subjectMap.set(s.id, s));
   remote.subjects.forEach((remSub) => {
+    if (deleted.has(remSub.id)) return;
     const locSub = subjectMap.get(remSub.id);
     if (!locSub) {
       subjectMap.set(remSub.id, remSub);
@@ -58,10 +42,11 @@ export function mergeSyncData(
     }
   });
 
-  // Merge Sessions by ID (Union: no session lost)
+  // Merge Sessions by ID (Union: no session lost, latest edit wins)
   const sessionMap = new Map<string, StudySession>();
   local.sessions.forEach((s) => sessionMap.set(s.id, s));
   remote.sessions.forEach((remSess) => {
+    if (deleted.has(remSess.id)) return;
     const locSess = sessionMap.get(remSess.id);
     if (!locSess) {
       sessionMap.set(remSess.id, remSess);
@@ -76,82 +61,97 @@ export function mergeSyncData(
     }
   });
 
-  // Merge Reviews by ID
-  const reviewMap = new Map<string, ReviewItem>();
-  local.reviews.forEach((r) => reviewMap.set(r.id, r));
-  remote.reviews.forEach((remRev) => {
-    const locRev = reviewMap.get(remRev.id);
-    if (!locRev) {
-      reviewMap.set(remRev.id, remRev);
-      hasChanges = true;
-    } else {
-      const remTime = new Date(remRev.updatedAt || remRev.createdAt).getTime();
-      const locTime = new Date(locRev.updatedAt || locRev.createdAt).getTime();
-      if (remTime > locTime) {
-        reviewMap.set(remRev.id, remRev);
-        hasChanges = true;
-      }
-    }
-  });
+  for (const id of deleted) {
+    const subjectRemoved = subjectMap.delete(id);
+    const sessionRemoved = sessionMap.delete(id);
+    hasChanges ||= subjectRemoved || sessionRemoved;
+  }
+
+  // Legacy preferences have no edit timestamp.
+  const remoteSettingsWin = (remote.settings.updatedAt ?? '') > (local.settings.updatedAt ?? '');
+  const settings = remoteSettingsWin ? remote.settings : local.settings;
+  hasChanges ||= remoteSettingsWin;
 
   return {
+    deletedIds: [...deleted],
     subjects: Array.from(subjectMap.values()),
     sessions: Array.from(sessionMap.values()).sort(
       (a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
     ),
-    reviews: Array.from(reviewMap.values()),
-    settings: {
-      ...local.settings,
-      ...remote.settings,
-    },
+    settings,
     hasChanges,
   };
 }
 
+function toBase64(bytes: Uint8Array): string {
+  let binary = '';
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary);
+}
+
+const fromBase64 = (value: string) => Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
+
 export const syncService = {
-  getEndpoint(syncKey: string): string {
-    const custom = storageService.getCustomSyncEndpoint();
-    if (custom && custom.trim()) {
-      return `${custom.replace(/\/$/, '')}/${encodeURIComponent(syncKey)}.json`;
+  async exchange(
+    code: string,
+    readLocal: () => SyncData,
+    mode: 'create' | 'join' | 'sync',
+    signal?: AbortSignal
+  ): Promise<SyncData> {
+    if (!isPairingCode(code)) throw new Error('Invalid pairing code');
+
+    // Derive independent values so reading room IDs never reveals encryption keys.
+    const room = toHex(new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(`room:${code}`))));
+    const secret = await crypto.subtle.digest('SHA-256', encoder.encode(`key:${code}`));
+    const key = await crypto.subtle.importKey('raw', secret, 'AES-GCM', false, ['encrypt', 'decrypt']);
+    const endpoint = new URL(getSyncEndpoint());
+    if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash) {
+      throw new Error('Invalid sync endpoint');
     }
-    return `${DEFAULT_FIREBASE_RTDB}/rooms/${encodeURIComponent(syncKey)}.json`;
-  },
+    const url = `${endpoint.href.replace(/\/$/, '')}/${room}.json`;
 
-  async pushToCloud(payload: SyncPayload): Promise<boolean> {
-    if (!navigator.onLine) return false;
+    for (let attempt = 0; attempt < 4; attempt++) {
+      const response = await fetch(url, { headers: { 'X-Firebase-ETag': 'true' }, signal });
+      const etag = response.headers.get('ETag');
+      if (!response.ok || !etag) throw new Error('Could not read sync room');
 
-    try {
-      const url = this.getEndpoint(payload.syncKey);
-      const res = await fetch(url, {
+      const envelope = await response.json();
+      if ((mode === 'create') !== (envelope === null)) throw new Error('Unexpected room state');
+
+      let remote: SyncData | null = null;
+      if (envelope) {
+        const plaintext = await crypto.subtle.decrypt(
+          { name: 'AES-GCM', iv: fromBase64(envelope.iv) }, key, fromBase64(envelope.ciphertext)
+        );
+        remote = JSON.parse(new TextDecoder().decode(plaintext)) as SyncData;
+      }
+
+      const local = readLocal();
+      const merged = remote ? mergeSyncData(local, remote) : {
+        ...local,
+        settings: { ...local.settings, updatedAt: local.settings.updatedAt ?? new Date().toISOString() },
+      };
+      const data: SyncData = {
+        subjects: merged.subjects,
+        sessions: merged.sessions,
+        settings: merged.settings,
+        deletedIds: merged.deletedIds,
+      };
+      if (remote && JSON.stringify(remote) === JSON.stringify(data)) return data;
+
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const ciphertext = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv }, key, encoder.encode(JSON.stringify(data))
+      );
+      const write = await fetch(url, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json', 'If-Match': etag },
+        body: JSON.stringify({ iv: toBase64(iv), ciphertext: toBase64(new Uint8Array(ciphertext)) }),
+        signal,
       });
-
-      return res.ok;
-    } catch (err) {
-      console.warn('Sync push error:', err);
-      return false;
+      if (write.ok) return data;
+      if (write.status !== 412) throw new Error('Could not write sync room');
     }
-  },
-
-  async pullFromCloud(syncKey: string): Promise<SyncPayload | null> {
-    if (!navigator.onLine) return null;
-
-    try {
-      const url = this.getEndpoint(syncKey);
-      const res = await fetch(url, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' },
-      });
-
-      if (!res.ok) return null;
-      const data = await res.json();
-      if (!data || !data.data) return null;
-      return data as SyncPayload;
-    } catch (err) {
-      console.warn('Sync pull error:', err);
-      return null;
-    }
+    throw new Error('Sync room changed repeatedly');
   },
 };

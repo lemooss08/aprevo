@@ -2,24 +2,31 @@
 
 **Desenvolvido por Antigravity.**
 
-O APREVO é uma aplicação web (PWA) para organizar, acompanhar e evoluir nos estudos. Ele reúne cronômetro de sessões, registro de estudos, revisões espaçadas, calendário, metas e estatísticas em uma interface responsiva, com tema claro e escuro e sincronização entre dispositivos sem necessidade de conta.
+O APREVO é uma aplicação web (PWA) para organizar, acompanhar e evoluir nos estudos. Ele reúne cronômetro de sessões, registro de estudos, calendário, metas e estatísticas em uma interface responsiva, com tema claro e escuro e sincronização entre dispositivos sem necessidade de conta.
 
 ## Funcionalidades
 
 - **Dashboard** — tempo estudado hoje, na semana e no total, barra da meta diária, gráfico dos últimos 7 dias e atividades recentes.
 - **Cronômetro** — inicia, pausa, retoma, finaliza ou descarta sessões de estudo vinculadas a uma matéria, com tópico e observações.
 - **Meus estudos** — histórico de sessões manuais e cronometradas, com filtros e exportação em CSV.
-- **Revisões** — sistema de repetição espaçada com intervalos de 1, 3, 7, 15 e 30 dias e indicador de revisões pendentes.
 - **Calendário** — visualização dos dias com atividade.
 - **Matérias** — cadastro de disciplinas com cor, descrição e gestão.
 - **Estatísticas** — gráficos de pizza e barras com Recharts para distribuição de tempo e evolução.
 - **Metas** — metas diárias e semanais de minutos de estudo, sequência de dias (streak) e conquistas.
 - **Configurações** — nome, tema, metas, backup completo em JSON, exportação CSV e limpeza de dados.
-- **Sincronização** — pareamento entre dispositivos por código (`APRV-XXXX-XX`) usando Firebase Realtime Database, com endpoint customizável e merge dos dados por ID e data de atualização.
+- **Sincronização** — pareamento entre dispositivos por código (`APRV3`) usando Firebase Realtime Database, com endpoint customizável e merge dos dados por ID e data de atualização.
 - **PWA** — manifest, service worker, ícone e instalação no celular; funciona offline para os dados já carregados.
 - **Feedback sonoro** — avisos sintetizados com a Web Audio API ao iniciar e concluir sessões.
 
 Os dados ficam no `localStorage` do navegador por padrão. A sincronização em nuvem é opcional.
+
+Configure `VITE_SYNC_ENDPOINT` no ambiente do Vite ou informe o endpoint em **Configurações**. Use o caminho HTTPS da coleção de salas, como `https://seu-projeto.firebaseio.com/rooms`, sem o sufixo `.json`. A configuração local tem prioridade sobre a variável de ambiente.
+
+Os códigos APRV3 são segredos de 128 bits e protegem os dados com AES-GCM. Compartilhe o código, o link ou o QR somente com quem deve ter acesso aos estudos. Ambos os dispositivos precisam usar o mesmo endpoint HTTPS. O cliente usa ETags do Firebase para gravar somente sobre a versão que leu.
+
+Para migrar um pareamento antigo, atualize os dispositivos, gere um código novo em um deles e conecte o outro. Os dados locais são preservados. As salas antigas precisam ser retiradas de acesso pelo administrador do Firebase. A criptografia protege o conteúdo, mas a disponibilidade depende das regras do banco. Evite permissões de leitura ou escrita na raiz ou no caminho pai das salas.
+
+Execute os testes automatizados com `npm test`.
 
 ## Tecnologias
 
@@ -56,9 +63,9 @@ src/
 ├── components/   # Header, Sidebar, MobileNav, modais, toast
 ├── context/      # AppContext — estado global e ações
 ├── services/     # storage (localStorage) e syncService (Firebase)
-├── types/        # interfaces Subject, StudySession, ReviewItem etc.
+├── types/        # interfaces Subject, StudySession e UserSettings
 ├── utils/        # formatação de datas/tempo e áudio
-├── views/        # Dashboard, Timer, Estudos, Revisões, Calendário,
+├── views/        # Dashboard, Timer, Estudos, Calendário,
 │                 # Matérias, Estatísticas, Metas, Configurações
 ├── App.tsx       # layout e troca de telas
 ├── index.css     # estilos globais + Tailwind

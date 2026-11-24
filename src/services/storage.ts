@@ -1,11 +1,11 @@
-import { Subject, StudySession, UserSettings, ActiveTimerState, ReviewItem, SyncPayload } from '../types';
+import { Subject, StudySession, UserSettings, ActiveTimerState, SyncData } from '../types';
 
 const STORAGE_KEYS = {
   SUBJECTS: 'aprevo_subjects_v2',
   SESSIONS: 'aprevo_sessions_v2',
-  REVIEWS: 'aprevo_reviews_v2',
   SETTINGS: 'aprevo_settings_v2',
   TIMER: 'aprevo_timer_v2',
+  DELETED_IDS: 'aprevo_deleted_ids_v3',
   SYNC_KEY: 'aprevo_synckey_v2',
   CUSTOM_SYNC_ENDPOINT: 'aprevo_sync_endpoint_v2',
 };
@@ -61,22 +61,6 @@ export const storageService = {
     localStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(sessions));
   },
 
-  getReviews(): ReviewItem[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.REVIEWS);
-    if (!raw) {
-      return [];
-    }
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return [];
-    }
-  },
-
-  saveReviews(reviews: ReviewItem[]): void {
-    localStorage.setItem(STORAGE_KEYS.REVIEWS, JSON.stringify(reviews));
-  },
-
   getSettings(): UserSettings {
     const raw = localStorage.getItem(STORAGE_KEYS.SETTINGS);
     if (!raw) {
@@ -92,6 +76,28 @@ export const storageService = {
 
   saveSettings(settings: UserSettings): void {
     localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+  },
+
+  getSyncData(): SyncData {
+    return {
+      subjects: this.getSubjects(),
+      sessions: this.getSessions(),
+      settings: this.getSettings(),
+      deletedIds: this.getDeletedIds(),
+    };
+  },
+
+  getDeletedIds(): string[] {
+    try {
+      const ids: unknown = JSON.parse(localStorage.getItem(STORAGE_KEYS.DELETED_IDS) ?? '[]');
+      return Array.isArray(ids) ? ids.filter((id): id is string => typeof id === 'string') : [];
+    } catch {
+      return [];
+    }
+  },
+
+  saveDeletedIds(ids: string[]): void {
+    localStorage.setItem(STORAGE_KEYS.DELETED_IDS, JSON.stringify(ids));
   },
 
   getActiveTimer(): ActiveTimerState | null {
@@ -142,7 +148,6 @@ export const storageService = {
       exportedAt: new Date().toISOString(),
       subjects: this.getSubjects(),
       sessions: this.getSessions(),
-      reviews: this.getReviews(),
       settings: this.getSettings(),
     };
   },
@@ -177,10 +182,11 @@ export const storageService = {
       'aprevo_subjects_v1', 'aprevo_sessions_v1', 'aprevo_reviews_v1', 'aprevo_settings_v1', 'aprevo_timer_v1', 'aprevo_synckey_v1',
       STORAGE_KEYS.SUBJECTS,
       STORAGE_KEYS.SESSIONS,
-      STORAGE_KEYS.REVIEWS,
+      'aprevo_reviews_v2',
       STORAGE_KEYS.SETTINGS,
       STORAGE_KEYS.TIMER,
       STORAGE_KEYS.SYNC_KEY,
+      STORAGE_KEYS.DELETED_IDS,
       STORAGE_KEYS.CUSTOM_SYNC_ENDPOINT,
     ];
     keys.forEach((k) => localStorage.removeItem(k));

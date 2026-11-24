@@ -19,26 +19,12 @@ export interface StudySession {
   updatedAt?: string;
 }
 
-export interface ReviewItem {
-  id: string;
-  subjectId: string;
-  topic: string;
-  stage: number; // 0 (1d), 1 (3d), 2 (7d), 3 (15d), 4 (30d), 5 (concluído)
-  intervals: number[]; // default [1, 3, 7, 15, 30]
-  nextReviewDate: string; // YYYY-MM-DD
-  lastReviewedAt?: string; // ISO string
-  notes?: string;
-  createdAt: string;
-  status: 'pending' | 'completed';
-  updatedAt?: string;
-}
-
 export interface UserSettings {
   userName: string;
   theme: 'dark' | 'light';
   dailyGoalMinutes: number;
   weeklyGoalMinutes: number;
-  syncKey?: string;
+  updatedAt?: string;
 }
 
 export interface ActiveTimerState {
@@ -60,14 +46,9 @@ export interface ToastMessage {
 
 export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'offline' | 'error';
 
-export interface SyncPayload {
-  syncKey: string;
-  timestamp: number;
-  version: number;
-  data: {
-    subjects: Subject[];
-    sessions: StudySession[];
-    reviews: ReviewItem[];
-    settings: UserSettings;
-  };
+export interface SyncData {
+  subjects: Subject[];
+  sessions: StudySession[];
+  settings: UserSettings;
+  deletedIds?: string[];
 }

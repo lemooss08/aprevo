@@ -41,7 +41,7 @@ export const SyncModal: React.FC = () => {
   // Generate QR Code on canvas
   useEffect(() => {
     if (syncKey && canvasRef.current && isSyncModalOpen && activeTab === 'share') {
-      const pairUrl = `${window.location.origin}/?sync=${syncKey}`;
+      const pairUrl = `${window.location.origin}/#sync=${syncKey}`;
       QRCode.toCanvas(
         canvasRef.current,
         pairUrl,
@@ -70,7 +70,7 @@ export const SyncModal: React.FC = () => {
 
   const handleCopyUrl = () => {
     if (!syncKey) return;
-    const url = `${window.location.origin}/?sync=${syncKey}`;
+    const url = `${window.location.origin}/#sync=${syncKey}`;
     navigator.clipboard.writeText(url);
     addToast('Link de pareamento copiado!', 'Abra esse link direto no outro dispositivo.');
   };
@@ -136,6 +136,7 @@ export const SyncModal: React.FC = () => {
               </p>
               <button
                 onClick={setupDeviceSyncKey}
+                disabled={syncStatus === 'syncing'}
                 className="w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs shadow-glow-sm transition-all"
               >
                 Ativar Sincronização e Gerar Código
@@ -149,7 +150,7 @@ export const SyncModal: React.FC = () => {
                   Código de Pareamento Exclusivo
                 </span>
                 <div className="flex items-center justify-center gap-2 mt-2">
-                  <span className="text-2xl font-mono font-black text-white tracking-widest bg-[#0e1017] px-4 py-1.5 rounded-xl border border-[#2b3346]">
+                  <span className="min-w-0 break-all text-sm font-mono font-bold text-white bg-[#0e1017] px-4 py-1.5 rounded-xl border border-[#2b3346]">
                     {syncKey}
                   </span>
                   <button
@@ -240,7 +241,7 @@ export const SyncModal: React.FC = () => {
               type="text"
               value={inputKey}
               onChange={(e) => setInputKey(e.target.value.toUpperCase())}
-              placeholder="Ex: APRV-9K3F-X2"
+              placeholder="Cole o código APRV3 do outro dispositivo"
               required
               className="w-full px-3.5 py-3 rounded-xl bg-[#161922] border border-[#282f42] text-center font-mono text-base font-bold tracking-widest text-white placeholder-slate-600 focus:outline-none focus:border-brand-500 uppercase"
             />

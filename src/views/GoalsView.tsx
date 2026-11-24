@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import {
   Target,
@@ -41,39 +41,19 @@ export const GoalsView: React.FC = () => {
   const weeklyPct = weeklyGoalSeconds > 0 ? Math.min(100, Math.round((weekSeconds / weeklyGoalSeconds) * 100)) : 0;
   const isWeeklyGoalAchieved = weekSeconds >= weeklyGoalSeconds && weeklyGoalSeconds > 0;
 
-  // Streak calculation (continuous days with at least 1 study session)
-  const currentStreak = (() => {
-    let streak = 0;
-    const checkDate = new Date();
-    checkDate.setHours(0, 0, 0, 0);
+  const todayKey = now.toDateString();
+  const currentStreak = useMemo(() => {
+    const studyDays = new Set(sessions.map((session) => new Date(session.startedAt).toDateString()));
+    const checkDate = new Date(todayKey);
+    if (!studyDays.has(todayKey)) checkDate.setDate(checkDate.getDate() - 1);
 
-    // If today has study, count today, otherwise start checking from yesterday
-    const studiedToday = sessions.some((s) => isSameDay(new Date(s.startedAt), checkDate));
-    if (studiedToday) {
+    let streak = 0;
+    while (studyDays.has(checkDate.toDateString())) {
       streak++;
       checkDate.setDate(checkDate.getDate() - 1);
-    } else {
-      // Check if yesterday had study
-      const yesterday = new Date(checkDate);
-      yesterday.setDate(yesterday.getDate() - 1);
-      const studiedYesterday = sessions.some((s) => isSameDay(new Date(s.startedAt), yesterday));
-      if (!studiedYesterday) return 0;
-      streak++;
-      checkDate.setDate(checkDate.getDate() - 2);
     }
-
-    while (true) {
-      const studied = sessions.some((s) => isSameDay(new Date(s.startedAt), checkDate));
-      if (studied) {
-        streak++;
-        checkDate.setDate(checkDate.getDate() - 1);
-      } else {
-        break;
-      }
-    }
-
     return streak;
-  })();
+  }, [sessions, todayKey]);
 
   const handleSaveGoals = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,7 +75,7 @@ export const GoalsView: React.FC = () => {
     {
       title: 'Meta Batida',
       desc: 'Cumpriu a meta diária estabelecida',
-      unlocked: isDailyGoalAchieved || sessions.length >= 2,
+      unlocked: isDailyGoalAchieved,
       icon: Target,
     },
     {

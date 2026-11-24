@@ -26,6 +26,11 @@ export function formatSecondsToHuman(totalSeconds: number): string {
 }
 
 export function formatDateBR(dateString: string): string {
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString);
+  if (dateOnly) {
+    const [, year, month, day] = dateOnly;
+    return `${day}/${month}/${year}`;
+  }
   try {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('pt-BR', {

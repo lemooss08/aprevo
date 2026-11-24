@@ -1,9 +1,19 @@
+let sharedContext: AudioContext | undefined;
+
+function getAudioContext(): AudioContext | undefined {
+  const AudioContextClass = window.AudioContext ||
+    (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioContextClass) return;
+  if (!sharedContext || sharedContext.state === 'closed') sharedContext = new AudioContextClass();
+  if (sharedContext.state !== 'running') void sharedContext.resume().catch(() => {});
+  return sharedContext;
+}
+
 // Web Audio API synthesized chimes for pleasant feedback
 export function playCompletionChime() {
   try {
-    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextClass) return;
-    const ctx = new AudioContextClass();
+    const ctx = getAudioContext();
+    if (!ctx) return;
 
     const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
     notes.forEach((freq, index) => {
@@ -30,9 +40,8 @@ export function playCompletionChime() {
 
 export function playStartChime() {
   try {
-    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextClass) return;
-    const ctx = new AudioContextClass();
+    const ctx = getAudioContext();
+    if (!ctx) return;
 
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();

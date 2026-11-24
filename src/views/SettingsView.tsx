@@ -132,7 +132,7 @@ export const SettingsView: React.FC = () => {
             type="text"
             value={customEndpoint}
             onChange={(e) => setCustomEndpoint(e.target.value)}
-            placeholder="Padrão: Firebase RTDB público (Ou informe https://seu-projeto.firebaseio.com/rooms)"
+            placeholder="https://seu-projeto.firebaseio.com/rooms"
             className="w-full px-3 py-2 rounded-xl bg-[#161922] border border-[#282f42] text-xs text-white placeholder-slate-600 font-mono focus:outline-none focus:border-brand-500"
           />
         </form>
