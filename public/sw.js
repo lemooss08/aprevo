@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aprevo-v1';
+const CACHE_NAME = 'aprevo-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -23,19 +23,25 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const networked = fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200 && response.type === 'basic') {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-          }
-          return response;
-        })
-        .catch(() => cached);
-      return cached || networked;
-    })
-  );
+  const request = event.request;
+  if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
+
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    if (request.mode === 'navigate') {
+      try {
+        const response = await fetch(request, { cache: 'no-cache' });
+        if (response.ok) await cache.put('/', response.clone());
+        return response;
+      } catch {
+        return (await cache.match('/')) || Response.error();
+      }
+    }
+
+    const cached = await cache.match(request);
+    if (cached) return cached;
+    const response = await fetch(request);
+    if (response.ok && response.type === 'basic') await cache.put(request, response.clone());
+    return response;
+  })());
 });
