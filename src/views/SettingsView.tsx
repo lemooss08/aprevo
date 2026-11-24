@@ -34,9 +34,9 @@ export const SettingsView: React.FC = () => {
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userName.trim()) return;
+    if (accountName === null && !userName.trim()) return;
     updateSettings({
-      userName: userName.trim(),
+      ...(accountName === null ? { userName: userName.trim() } : {}),
       dailyGoalMinutes: Math.max(1, dailyGoalMinutes),
     });
   };
@@ -93,18 +93,20 @@ export const SettingsView: React.FC = () => {
           </div>
           <div>
             <h3 className="text-base font-bold text-white tracking-tight">Perfil do Usuário</h3>
-            <p className="text-xs text-slate-400">Identificação no dashboard e relatórios do APREVO</p>
+            <p className="text-xs text-slate-400">Nome exibido no dashboard e meta diária de estudo</p>
           </div>
         </div>
 
         <form onSubmit={handleSaveProfile} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Nome ou Apelido
+            <label htmlFor="profile-name" className="block text-xs font-semibold text-slate-300 mb-1.5">
+              {accountName === null ? 'Nome ou Apelido' : 'Nome de usuário da conta'}
             </label>
             <input
+              id="profile-name"
               type="text"
-              value={userName}
+              value={accountName ?? userName}
+              readOnly={accountName !== null}
               onChange={(e) => setUserName(e.target.value)}
               required
               placeholder="Seu nome"

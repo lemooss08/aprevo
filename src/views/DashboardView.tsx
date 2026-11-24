@@ -35,7 +35,7 @@ interface DashboardViewProps {
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) => {
-  const { sessions, subjects, settings, setActiveTab } = useApp();
+  const { sessions, subjects, settings, accountName, setActiveTab } = useApp();
 
   const now = new Date();
   const startOfWeek = getStartOfWeek(now);
@@ -134,7 +134,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
               <span>Organização • Evolução • Conhecimento</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              Bem-vindo, {settings.userName}!
+              Bem-vindo, {accountName ?? settings.userName}!
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl leading-relaxed">
               Você já estudou <span className="text-brand-300 font-bold">{formatSecondsToHuman(todaySeconds)}</span> hoje.
