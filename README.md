@@ -1,8 +1,17 @@
 # APREVO — Plataforma de Gestão de Estudos
 
-**Desenvolvido por Antigravity.**
+**Desenvolvido em colaboração pelos agentes Codex (OpenAI) e Antigravity.**
 
-O APREVO é uma aplicação web (PWA) para organizar, acompanhar e evoluir nos estudos. Ele reúne cronômetro de sessões, registro de estudos, calendário, metas e estatísticas em uma interface responsiva, com tema claro e escuro e sincronização entre dispositivos sem necessidade de conta.
+O APREVO é uma aplicação web (PWA) para organizar e acompanhar os estudos. Reúne cronômetro, histórico de sessões, calendário, metas e estatísticas em uma interface responsiva com temas claro e escuro.
+
+[Acesse o APREVO](https://aprevo.vercel.app/)
+
+## Novidades recentes
+
+- **Área de login.** Crie uma conta ou entre com nome de usuário e senha. O Firebase Authentication gerencia as credenciais.
+- **Dados de estudo na nuvem.** O Firebase Realtime Database guarda matérias, sessões e preferências da conta. Cada pessoa tem acesso aos próprios dados e pode usá-los no computador e no celular entrando na mesma conta. O pareamento por código, link ou QR foi removido.
+- **Perfil vinculado à conta.** O nome de usuário aparece automaticamente em **Configurações → Perfil do Usuário** e na saudação do dashboard.
+- **Importação de estudos anteriores.** Para trazer matérias e sessões salvas antes do login, entre na conta no navegador em que você estudava e acesse **Configurações → Minha conta → Importar estudos para esta conta**.
 
 ## Funcionalidades
 
@@ -13,7 +22,7 @@ O APREVO é uma aplicação web (PWA) para organizar, acompanhar e evoluir nos e
 - **Matérias** — cadastro de disciplinas com cor, descrição e gestão.
 - **Estatísticas** — gráficos de pizza e barras com Recharts para distribuição de tempo e evolução.
 - **Metas** — metas diárias e semanais de minutos de estudo, sequência de dias (streak) e conquistas.
-- **Configurações** — nome, tema, metas, backup completo em JSON, exportação CSV e limpeza de dados.
+- **Configurações** — perfil da conta, tema, metas, backup em JSON, exportação CSV e limpeza de dados.
 - **Conta** — cadastro e login por nome de usuário e senha. Sessões, matérias e preferências acompanham a conta no computador e no celular.
 - **PWA** — manifest, service worker, ícone e instalação no celular; funciona offline para os dados já carregados.
 - **Feedback sonoro** — avisos sintetizados com a Web Audio API ao iniciar e concluir sessões.
