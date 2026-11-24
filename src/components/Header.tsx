@@ -8,9 +8,6 @@ import {
   Sun,
   Moon,
   Plus,
-  Cloud,
-  Smartphone,
-  RefreshCw,
   CheckCircle2,
 } from 'lucide-react';
 import { formatSecondsToHMS } from '../utils/formatters';
@@ -35,9 +32,6 @@ export const Header: React.FC<HeaderProps> = ({
     settings,
     updateSettings,
     subjects,
-    syncKey,
-    syncStatus,
-    setIsSyncModalOpen,
   } = useApp();
 
   const getPageInfo = () => {
@@ -92,45 +86,8 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Right side: Sync Pill + Active timer + Actions */}
+      {/* Right side: Active timer + Actions */}
       <div className="flex items-center gap-1.5 sm:gap-3">
-        {/* Sync Device Button / Pill */}
-        <button
-          onClick={() => setIsSyncModalOpen(true)}
-          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-            syncKey
-              ? syncStatus === 'synced'
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20'
-                : syncStatus === 'syncing'
-                ? 'bg-brand-500/15 border-brand-500/30 text-brand-300'
-                : 'bg-[#161922] border-[#2a3044] text-slate-300'
-              : 'bg-brand-600/15 border-brand-500/30 text-brand-300 hover:bg-brand-600/25 shadow-glow-sm'
-          }`}
-          title="Sincronizar Computador e Celular sem conta"
-        >
-          {syncKey ? (
-            <>
-              {syncStatus === 'syncing' ? (
-                <RefreshCw className="w-3.5 h-3.5 animate-spin text-brand-400" />
-              ) : (
-                <Cloud className="w-3.5 h-3.5 text-emerald-400" />
-              )}
-              <span className="hidden sm:inline font-mono font-semibold">
-                {syncKey.slice(0, 9)}
-              </span>
-              <span className="sm:hidden font-mono text-[10px]">
-                {syncKey.slice(5, 9)}
-              </span>
-            </>
-          ) : (
-            <>
-              <Smartphone className="w-3.5 h-3.5 text-brand-400" />
-              <span className="hidden sm:inline font-semibold">Sincronizar Celular</span>
-              <span className="sm:hidden font-semibold text-[11px]">Sync</span>
-            </>
-          )}
-        </button>
-
         {/* Active Timer Mini-Pill (visible outside timer tab) */}
         {activeTimer && activeTab !== 'timer' && (
           <div className="flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-full bg-brand-500/15 border border-brand-500/35 text-white shadow-glow-sm">

@@ -5,7 +5,7 @@ import { Header } from './components/Header';
 import { MobileNav } from './components/MobileNav';
 import { ToastContainer } from './components/ToastContainer';
 import { StudyModal } from './components/StudyModal';
-import { SyncModal } from './components/SyncModal';
+import { AccountGate } from './components/AccountGate';
 import { DashboardView } from './views/DashboardView';
 import { TimerView } from './views/TimerView';
 import { StudyLogsView } from './views/StudyLogsView';
@@ -63,8 +63,6 @@ const MainLayout: React.FC = () => {
         onClose={() => setIsCreateStudyModalOpen(false)}
       />
 
-      <SyncModal />
-
       {/* Notificações Toast Reativas */}
       <ToastContainer />
     </div>
@@ -73,9 +71,13 @@ const MainLayout: React.FC = () => {
 
 export function App() {
   return (
-    <AppProvider>
-      <MainLayout />
-    </AppProvider>
+    <AccountGate>
+      {(user) => (
+        <AppProvider key={user?.uid ?? 'local'} user={user}>
+          <MainLayout />
+        </AppProvider>
+      )}
+    </AccountGate>
   );
 }
 

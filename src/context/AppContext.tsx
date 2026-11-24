@@ -1,14 +1,18 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   Subject,
   StudySession,
   UserSettings,
   ActiveTimerState,
   ToastMessage,
-  SyncStatus,
+  StudyData,
 } from '../types';
-import { storageService, DEFAULT_SETTINGS } from '../services/storage';
-import { syncService, generatePairingCode, getSyncEndpoint, isPairingCode, mergeSyncData } from '../services/syncService';
+import { createStudyStorage, DEFAULT_SETTINGS } from '../services/storage';
+import { firebaseAuth, firebaseDatabase } from '../services/firebase';
+import { signOut, type User } from 'firebase/auth';
+import { onValue, ref, runTransaction } from 'firebase/database';
+import { accountUsername } from '../services/accountName';
+import { mergeStudyData } from '../services/studyData';
 import { playStartChime, playCompletionChime } from '../utils/audio';
 
 interface AppContextType {
@@ -47,16 +51,11 @@ interface AppContextType {
   finishTimer: () => StudySession | null;
   discardTimer: () => void;
 
-  // Sync (Cross-Device without account)
-  syncKey: string | null;
-  syncStatus: SyncStatus;
-  lastSyncTime: Date | null;
-  isSyncModalOpen: boolean;
-  setIsSyncModalOpen: (val: boolean) => void;
-  setupDeviceSyncKey: () => Promise<void>;
-  connectExistingSyncKey: (key: string) => Promise<boolean>;
-  disconnectDeviceSync: () => void;
-  forceSyncNow: () => Promise<void>;
+  accountName: string | null;
+  cloudStatus: 'loading' | 'saving' | 'saved' | 'error';
+  hasLegacyData: boolean;
+  importLegacyData: () => void;
+  logout: () => Promise<void>;
 
   // Toasts
   toasts: ToastMessage[];
@@ -66,7 +65,14 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | null>(null);
 
-export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AppProvider: React.FC<{ children: React.ReactNode; user: User | null }> = ({ children, user }) => {
+  const uid = user?.uid;
+  const storageService = useMemo(() => createStudyStorage(uid), [uid]);
+  const [hasLegacyData, setHasLegacyData] = useState(() => {
+    const legacy = createStudyStorage();
+    return Boolean(uid && (legacy.getSubjects().length > 0 || legacy.getSessions().length > 0));
+  });
+  const [cloudStatus, setCloudStatus] = useState<AppContextType['cloudStatus']>('loading');
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [subjects, setSubjects] = useState<Subject[]>(() => storageService.getSubjects());
   const [sessions, setSessions] = useState<StudySession[]>(() => storageService.getSessions());
@@ -87,15 +93,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const saved = storageService.getActiveTimer();
     return saved ? saved.isRunning : false;
   });
-
-  // Sync states
-  const [syncKey, setSyncKey] = useState<string | null>(() => {
-    const saved = storageService.getSyncKey();
-    return saved && isPairingCode(saved) ? saved : null;
-  });
-  const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle');
-  const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
-  const [isSyncModalOpen, setIsSyncModalOpen] = useState<boolean>(false);
 
   // Toasts
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -149,102 +146,115 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   }, [isTimerRunning, activeTimer]);
 
-  const syncRequest = useRef<AbortController | null>(null);
-  const scheduledSync = useRef<number | undefined>(undefined);
+  const requestSave = useRef<() => void>(() => {});
 
-  const exchange = useCallback(async (key: string, mode: 'create' | 'join' | 'sync') => {
-    if (syncRequest.current) return false;
-    if (!navigator.onLine) {
-      setSyncStatus('offline');
-      return false;
-    }
-    const request = new AbortController();
-    syncRequest.current = request;
-    setSyncStatus('syncing');
-
-    try {
-      const data = await syncService.exchange(key, () => storageService.getSyncData(), mode, request.signal);
-      if (request.signal.aborted) return false;
-      const merged = mergeSyncData(storageService.getSyncData(), data);
-      if (merged.hasChanges) {
-        storageService.saveSubjects(merged.subjects);
-        storageService.saveSessions(merged.sessions);
-        storageService.saveSettings(merged.settings);
-        storageService.saveDeletedIds(merged.deletedIds ?? []);
-        setSubjects(merged.subjects);
-        setSessions(merged.sessions);
-        setSettings(merged.settings);
-      }
-      storageService.saveSyncKey(key);
-      setSyncKey(key);
-      setLastSyncTime(new Date());
-      setSyncStatus('synced');
-      return true;
-    } catch {
-      if (!request.signal.aborted) setSyncStatus('error');
-      return false;
-    } finally {
-      if (syncRequest.current === request) syncRequest.current = null;
-    }
-  }, []);
-
-  const triggerCloudSync = useCallback(async () => {
-    const key = storageService.getSyncKey();
-    if (key && isPairingCode(key)) await exchange(key, 'sync');
-  }, [exchange]);
-
-  const scheduleCloudPush = () => {
-    if (!syncKey && !syncRequest.current) return;
-    window.clearTimeout(scheduledSync.current);
-    const flush = () => {
-      if (syncRequest.current) {
-        scheduledSync.current = window.setTimeout(flush, 1200);
-      } else {
-        void triggerCloudSync();
-      }
-    };
-    scheduledSync.current = window.setTimeout(flush, 1200);
-  };
+  const applyStudyData = useCallback((data: StudyData) => {
+    storageService.saveSubjects(data.subjects);
+    storageService.saveSessions(data.sessions);
+    storageService.saveSettings(data.settings);
+    storageService.saveDeletedIds(data.deletedIds ?? []);
+    setSubjects(data.subjects);
+    setSessions(data.sessions);
+    setSettings(data.settings);
+  }, [storageService]);
 
   useEffect(() => {
-    const syncWhenVisible = () => {
-      if (document.visibilityState === 'visible' && navigator.onLine) void triggerCloudSync();
+    if (!firebaseDatabase || !uid) return;
+    const accountData = ref(firebaseDatabase, `users/${uid}/studyData`);
+    let active = true;
+    let saving = false;
+    let pending = false;
+    let timer: number | undefined;
+
+    function applyRemote(raw: unknown) {
+      if (typeof raw !== 'string') return;
+      const merged = mergeStudyData(storageService.getStudyData(), JSON.parse(raw) as StudyData);
+      if (merged.hasChanges) applyStudyData(merged);
+    }
+
+    async function save() {
+      if (!active || saving || !pending) return;
+      pending = false;
+      saving = true;
+      setCloudStatus('saving');
+      try {
+        const result = await runTransaction(accountData, (raw: string | null) => {
+          const local = storageService.getStudyData();
+          if (raw === null) return JSON.stringify(local);
+          const { hasChanges, ...merged } = mergeStudyData(local, JSON.parse(raw) as StudyData);
+          return JSON.stringify(merged);
+        }, { applyLocally: false });
+        if (active) {
+          applyRemote(result.snapshot.val());
+          setCloudStatus(pending ? 'saving' : 'saved');
+        }
+      } catch {
+        if (active) setCloudStatus('error');
+      } finally {
+        saving = false;
+        if (active && pending) void save();
+      }
+    }
+
+    const queueSave = () => {
+      pending = true;
+      setCloudStatus('saving');
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => void save(), 300);
     };
-    const handleOffline = () => setSyncStatus('offline');
-    const interval = window.setInterval(syncWhenVisible, 25000);
-    document.addEventListener('visibilitychange', syncWhenVisible);
-    window.addEventListener('online', triggerCloudSync);
-    window.addEventListener('offline', handleOffline);
+    requestSave.current = queueSave;
+
+    const stop = onValue(accountData, (snapshot) => {
+      if (!active) return;
+      try {
+        applyRemote(snapshot.val());
+        if (!saving && !pending) setCloudStatus((status) => status === 'loading' ? 'saved' : status);
+      } catch {
+        setCloudStatus('error');
+      }
+    }, () => { if (active) setCloudStatus('error'); });
+
+    const local = storageService.getStudyData();
+    if (local.sessions.length || local.subjects.length || local.settings.updatedAt || local.deletedIds?.length) {
+      queueSave();
+    }
+
+    const reconnect = () => {
+      if (navigator.onLine) queueSave();
+    };
+    window.addEventListener('online', reconnect);
 
     return () => {
-      window.clearInterval(interval);
-      window.clearTimeout(scheduledSync.current);
-      syncRequest.current?.abort();
-      syncRequest.current = null;
-      document.removeEventListener('visibilitychange', syncWhenVisible);
-      window.removeEventListener('online', triggerCloudSync);
-      window.removeEventListener('offline', handleOffline);
+      active = false;
+      window.clearTimeout(timer);
+      window.removeEventListener('online', reconnect);
+      requestSave.current = () => {};
+      stop();
     };
-  }, [triggerCloudSync]);
+  }, [applyStudyData, storageService, uid]);
 
-  useEffect(() => {
-    let active = true;
-    queueMicrotask(() => {
-      if (!active) return;
-      const url = new URL(window.location.href);
-      const fragment = new URLSearchParams(url.hash.slice(1));
-      const key = fragment.get('sync') ?? url.searchParams.get('sync');
-      if (!key) return;
-      if (fragment.has('sync')) {
-        fragment.delete('sync');
-        url.hash = fragment.toString();
-      }
-      url.searchParams.delete('sync');
-      window.history.replaceState(window.history.state, '', url);
-      if (key !== storageService.getSyncKey()) void connectExistingSyncKey(key);
-    });
-    return () => { active = false; };
-  }, []);
+  const importLegacyData = () => {
+    const legacy = createStudyStorage().getStudyData();
+    const local = storageService.getStudyData();
+    if (!legacy.sessions.length && !legacy.subjects.length) return;
+    applyStudyData(mergeStudyData(local, {
+      ...legacy,
+      deletedIds: [],
+      settings: local.settings,
+    }));
+    setHasLegacyData(false);
+    requestSave.current();
+    addToast('Estudos importados', 'Os dados deste navegador foram adicionados à sua conta.');
+  };
+
+  const logout = async () => {
+    if (!firebaseAuth) return;
+    try {
+      await signOut(firebaseAuth);
+    } catch {
+      addToast('Não foi possível sair', 'Tente novamente.', 'error');
+    }
+  };
 
   // Subject actions
   const addSubject = (name: string, color: string, description?: string): Subject => {
@@ -260,7 +270,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = [...storageService.getSubjects(), newSubject];
     setSubjects(updated);
     storageService.saveSubjects(updated);
-    scheduleCloudPush();
+    requestSave.current();
     addToast('Matéria criada', `"${name}" adicionada ao APREVO.`);
     return newSubject;
   };
@@ -272,7 +282,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
     setSubjects(updated);
     storageService.saveSubjects(updated);
-    scheduleCloudPush();
+    requestSave.current();
     addToast('Matéria atualizada', `Alterações em "${name}" salvas.`);
   };
 
@@ -282,7 +292,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = storageService.getSubjects().filter((s) => s.id !== id);
     setSubjects(updated);
     storageService.saveSubjects(updated);
-    scheduleCloudPush();
+    requestSave.current();
     addToast('Matéria excluída', target ? `"${target.name}" foi removida.` : undefined, 'info');
   };
 
@@ -297,7 +307,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = [newSession, ...storageService.getSessions()];
     setSessions(updated);
     storageService.saveSessions(updated);
-    scheduleCloudPush();
+    requestSave.current();
     addToast('Sessão registrada!', `${sessionData.topic} salvo com sucesso.`);
     return newSession;
   };
@@ -307,7 +317,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = storageService.getSessions().map((s) => (s.id === id ? { ...s, ...sessionData, updatedAt: now } : s));
     setSessions(updated);
     storageService.saveSessions(updated);
-    scheduleCloudPush();
+    requestSave.current();
     addToast('Sessão atualizada', 'O registro foi modificado.');
   };
 
@@ -316,7 +326,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = storageService.getSessions().filter((s) => s.id !== id);
     setSessions(updated);
     storageService.saveSessions(updated);
-    scheduleCloudPush();
+    requestSave.current();
     addToast('Registro excluído', 'A sessão foi removida.', 'info');
   };
 
@@ -325,23 +335,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = { ...storageService.getSettings(), ...newSettings, updatedAt: new Date().toISOString() };
     setSettings(updated);
     storageService.saveSettings(updated);
-    scheduleCloudPush();
+    requestSave.current();
     addToast('Configurações salvas', 'Preferências atualizadas.');
   };
 
   const resetAllData = () => {
-    cancelSync();
-    storageService.clearAllData();
-    setSubjects(storageService.getSubjects());
-    setSessions(storageService.getSessions());
-    setSettings(DEFAULT_SETTINGS);
-    setSyncKey(null);
-    setSyncStatus('idle');
-    setLastSyncTime(null);
+    const data = storageService.getStudyData();
+    applyStudyData({
+      subjects: [],
+      sessions: [],
+      settings: { ...DEFAULT_SETTINGS, updatedAt: new Date().toISOString() },
+      deletedIds: [...new Set([
+        ...(data.deletedIds ?? []),
+        ...data.subjects.map(({ id }) => id),
+        ...data.sessions.map(({ id }) => id),
+      ])],
+    });
     setActiveTimer(null);
     setIsTimerRunning(false);
     setTimerSeconds(0);
-    addToast('Dados restaurados', 'O APREVO foi restaurado com sucesso.', 'info');
+    storageService.saveActiveTimer(null);
+    requestSave.current();
+    addToast('Dados restaurados', 'As sessões, matérias e preferências foram limpas.', 'info');
   };
 
   const exportDataCSV = () => {
@@ -359,65 +374,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     link.click();
     document.body.removeChild(link);
     addToast('Backup JSON Gerado', 'Arquivo de segurança exportado.');
-  };
-
-  // Sync methods
-  const setupDeviceSyncKey = async () => {
-    if (!getSyncEndpoint()) {
-      addToast('Banco de sincronização ausente', 'Informe o endpoint do Firebase em Configurações.', 'error');
-      return;
-    }
-    try {
-      const key = generatePairingCode();
-      if (await exchange(key, 'create')) {
-        addToast('Código de pareamento criado', 'Use o código no outro dispositivo.');
-        return;
-      }
-    } catch {
-      setSyncStatus('error');
-    }
-    addToast('Falha ao criar o código', 'Verifique a conexão e tente novamente.', 'error');
-  };
-
-  const connectExistingSyncKey = async (key: string): Promise<boolean> => {
-    const cleanKey = key.trim().toUpperCase();
-    if (!isPairingCode(cleanKey)) {
-      addToast('Código incompatível', 'Gere um código novo no outro dispositivo.', 'error');
-      return false;
-    }
-    if (!getSyncEndpoint()) {
-      addToast('Banco de sincronização ausente', 'Configure o mesmo endpoint do outro dispositivo.', 'error');
-      return false;
-    }
-    if (!await exchange(cleanKey, 'join')) {
-      addToast('Não foi possível parear', 'Confira o código, o banco configurado e a conexão.', 'error');
-      return false;
-    }
-    addToast('Dispositivo conectado', 'Dados sincronizados entre seus dispositivos.');
-    return true;
-  };
-
-  const cancelSync = () => {
-    window.clearTimeout(scheduledSync.current);
-    syncRequest.current?.abort();
-    syncRequest.current = null;
-  };
-
-  const disconnectDeviceSync = () => {
-    cancelSync();
-    setSyncKey(null);
-    storageService.saveSyncKey(null);
-    setSyncStatus('idle');
-    setLastSyncTime(null);
-    addToast('Sincronização Desconectada', 'Este dispositivo não está mais pareado com a nuvem.', 'info');
-  };
-
-  const forceSyncNow = async () => {
-    if (!syncKey) {
-      await setupDeviceSyncKey();
-      return;
-    }
-    await triggerCloudSync();
   };
 
   // Timer actions
@@ -522,7 +478,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setTimerSeconds(0);
     storageService.saveActiveTimer(null);
 
-    scheduleCloudPush();
+    requestSave.current();
     playCompletionChime();
     addToast('Parabéns!', `Sessão finalizada: ${Math.round(finalSeconds / 60)} min registrados no APREVO.`);
     return savedSession;
@@ -562,15 +518,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         resumeTimer,
         finishTimer,
         discardTimer,
-        syncKey,
-        syncStatus,
-        lastSyncTime,
-        isSyncModalOpen,
-        setIsSyncModalOpen,
-        setupDeviceSyncKey,
-        connectExistingSyncKey,
-        disconnectDeviceSync,
-        forceSyncNow,
+        accountName: user ? accountUsername(user.email) : null,
+        cloudStatus,
+        hasLegacyData,
+        importLegacyData,
+        logout,
         toasts,
         addToast,
         removeToast,

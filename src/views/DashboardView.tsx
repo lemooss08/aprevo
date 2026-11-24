@@ -35,7 +35,7 @@ interface DashboardViewProps {
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) => {
-  const { sessions, subjects, settings, setActiveTab, syncKey, setIsSyncModalOpen } = useApp();
+  const { sessions, subjects, settings, setActiveTab } = useApp();
 
   const now = new Date();
   const startOfWeek = getStartOfWeek(now);

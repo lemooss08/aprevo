@@ -44,9 +44,7 @@ export interface ToastMessage {
   type: 'success' | 'error' | 'info';
 }
 
-export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'offline' | 'error';
-
-export interface SyncData {
+export interface StudyData {
   subjects: Subject[];
   sessions: StudySession[];
   settings: UserSettings;

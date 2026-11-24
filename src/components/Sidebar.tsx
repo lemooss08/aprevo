@@ -12,7 +12,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Flame,
-  Cloud,
   X,
 } from 'lucide-react';
 
@@ -33,9 +32,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     activeTab,
     setActiveTab,
     isTimerRunning,
-    syncKey,
-    syncStatus,
-    setIsSyncModalOpen,
   } = useApp();
 
   const navItems = [
@@ -151,27 +147,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </nav>
         </div>
 
-        {/* Footer Area: Sync status button & Desktop collapse toggle */}
+        {/* Footer Area: Desktop collapse toggle */}
         <div className="p-3 border-t border-[#232836] space-y-2">
-          {(!isCollapsed || isMobileOpen) && (
-            <button
-              onClick={() => setIsSyncModalOpen(true)}
-              className="w-full p-2.5 rounded-xl bg-[#141722] border border-[#232836] hover:border-brand-500/40 text-left flex items-center gap-3 transition-all"
-            >
-              <div className="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center shrink-0">
-                <Cloud className="w-4 h-4" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold text-slate-200 truncate">
-                  {syncKey ? 'Nuvem Pareada' : 'Sincronizar Celular'}
-                </p>
-                <p className="text-[10px] text-slate-400 truncate">
-                  {syncKey ? syncKey : 'Sem conta necessária'}
-                </p>
-              </div>
-            </button>
-          )}
-
           {/* Desktop collapse toggle */}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
