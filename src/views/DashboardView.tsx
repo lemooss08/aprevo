@@ -174,7 +174,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
 
       {/* Onboarding Callout if 0 subjects */}
       {subjects.length === 0 && (
-        <div className="p-5 sm:p-6 rounded-2xl bg-[#131622] border border-brand-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-glow-sm">
+        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#131622] border border-brand-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-glow-sm">
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-300 flex items-center justify-center shrink-0">
               <FolderKanban className="w-5 h-5" />
@@ -188,7 +188,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
           </div>
           <button
             onClick={() => setActiveTab('subjects')}
-            className="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold transition-all shadow-sm whitespace-nowrap active:scale-[0.98]"
+            className="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 dark:hover:bg-brand-500 text-[#fff] text-xs font-bold transition-all shadow-sm whitespace-nowrap active:scale-[0.98]"
           >
             + Criar Primeira Matéria
           </button>
