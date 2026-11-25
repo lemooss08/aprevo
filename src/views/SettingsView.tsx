@@ -132,7 +132,7 @@ export const SettingsView: React.FC = () => {
           <div className="pt-2 flex justify-end">
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs shadow-sm transition-all"
+              className="px-5 py-2.5 rounded-xl button-primary font-bold text-xs shadow-sm transition-all"
             >
               Salvar Alterações
             </button>
@@ -158,7 +158,7 @@ export const SettingsView: React.FC = () => {
             onClick={() => handleToggleTheme('dark')}
             className={`p-4 rounded-2xl border text-left flex items-center justify-between transition-all ${
               settings.theme === 'dark'
-                ? 'bg-brand-500/10 border-brand-500 text-white shadow-glow-sm'
+                ? 'button-secondary-active shadow-sm'
                 : 'bg-[#2c2c2c] border-[#414141] text-slate-400 hover:text-white'
             }`}
           >
@@ -177,7 +177,7 @@ export const SettingsView: React.FC = () => {
             onClick={() => handleToggleTheme('light')}
             className={`p-4 rounded-2xl border text-left flex items-center justify-between transition-all ${
               settings.theme === 'light'
-                ? 'bg-brand-500/10 border-brand-500 text-white shadow-glow-sm'
+                ? 'button-secondary-active shadow-sm'
                 : 'bg-[#2c2c2c] border-[#414141] text-slate-400 hover:text-white'
             }`}
           >

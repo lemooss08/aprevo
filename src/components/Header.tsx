@@ -120,7 +120,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onOpenNewStudyModal}
           aria-label="Registrar novo estudo"
-          className="flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-medium shadow-sm transition-all hover:shadow-glow-sm active:scale-[0.98]"
+          className="flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-xl button-primary text-xs font-medium shadow-sm transition-all hover:shadow-glow-sm active:scale-[0.98]"
         >
           <Plus className="w-4 h-4" />
           <span className="hidden sm:inline">Estudo</span>

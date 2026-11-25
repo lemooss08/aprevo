@@ -125,7 +125,7 @@ export const StudyLogsView: React.FC<StudyLogsViewProps> = ({ onOpenCreate }) =>
           {/* New study button */}
           <button
             onClick={onOpenCreate}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-xs shadow-sm transition-all"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl button-primary font-medium text-xs shadow-sm transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>Novo Registro</span>

@@ -85,7 +85,7 @@ export function AccountGate({ children }: { children: (user: User | null) => Rea
                 {register && <p className="mt-1.5 text-xs text-slate-400">Use pelo menos 6 caracteres. A conta sem e-mail não tem recuperação de senha.</p>}
               </div>
               {error && <p role="alert" className="text-sm text-rose-300">{error}</p>}
-              <button disabled={busy} type="submit" className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-3 text-sm font-bold hover:bg-brand-500 disabled:opacity-50">
+              <button disabled={busy} type="submit" className="flex w-full items-center justify-center gap-2 rounded-xl button-primary px-4 py-3 text-sm font-bold disabled:opacity-50">
                 <LockKeyhole aria-hidden="true" className="h-4 w-4" />
                 {busy ? 'Aguarde…' : register ? 'Criar conta' : 'Entrar'}
               </button>

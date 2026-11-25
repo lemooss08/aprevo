@@ -140,7 +140,7 @@ export const TimerView: React.FC = () => {
           {!activeTimer ? (
             <a
               href="#start-form"
-              className="flex items-center gap-2 px-8 py-4 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-glow-sm hover:shadow-glow transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
+              className="flex items-center gap-2 px-8 py-4 rounded-2xl button-primary font-bold text-sm shadow-glow-sm hover:shadow-glow transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
             >
               <Play className="w-4 h-4 fill-current" />
               <span>Configurar e Iniciar Foco</span>
@@ -169,7 +169,7 @@ export const TimerView: React.FC = () => {
               {/* Finish Session */}
               <button
                 onClick={handleFinish}
-                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-glow-sm transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
+                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl button-primary font-bold text-sm shadow-glow-sm transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Finalizar e Salvar</span>
@@ -238,7 +238,7 @@ export const TimerView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => applyPreset('Técnica Pomodoro (25m)')}
-                className="px-3 py-1.5 rounded-xl bg-[#343434] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#454545] transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-xl button-secondary text-xs font-medium border transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <Zap className="w-3.5 h-3.5 text-amber-400" />
                 <span>Pomodoro (25m)</span>
@@ -246,7 +246,7 @@ export const TimerView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => applyPreset('Deep Work (50m)')}
-                className="px-3 py-1.5 rounded-xl bg-[#343434] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#454545] transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-xl button-secondary text-xs font-medium border transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <Target className="w-3.5 h-3.5 text-brand-400" />
                 <span>Deep Work (50m)</span>
@@ -254,7 +254,7 @@ export const TimerView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => applyPreset('Ultra Focus (90m)')}
-                className="px-3 py-1.5 rounded-xl bg-[#343434] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#454545] transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-xl button-secondary text-xs font-medium border transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <Flame className="w-3.5 h-3.5 text-rose-400" />
                 <span>Ultra Focus (90m)</span>
@@ -267,7 +267,7 @@ export const TimerView: React.FC = () => {
               <p className="text-sm text-slate-300 font-medium">Você precisa cadastrar ao menos uma matéria.</p>
               <button
                 onClick={() => setActiveTab('subjects')}
-                className="mt-3 px-4 py-2 rounded-xl bg-brand-600 text-white text-xs font-semibold hover:bg-brand-500 cursor-pointer"
+                className="mt-3 px-4 py-2 rounded-xl button-primary text-xs font-semibold cursor-pointer"
               >
                 Cadastrar Matérias
               </button>
@@ -337,7 +337,7 @@ export const TimerView: React.FC = () => {
                 <button
                   type="submit"
                   disabled={!topic.trim()}
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm shadow-glow-sm transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-xl button-primary disabled:opacity-50 disabled:cursor-not-allowed font-bold text-sm shadow-glow-sm transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
                 >
                   Começar a Estudar Agora
                 </button>

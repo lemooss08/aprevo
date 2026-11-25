@@ -431,7 +431,7 @@ export const StatsView: React.FC = () => {
                 onClick={() => setActiveTabMetric('weekly')}
                 className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
                   activeTabMetric === 'weekly'
-                    ? 'bg-brand-600 text-white font-semibold'
+                    ? 'button-primary font-semibold'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -441,7 +441,7 @@ export const StatsView: React.FC = () => {
                 onClick={() => setActiveTabMetric('monthly')}
                 className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
                   activeTabMetric === 'monthly'
-                    ? 'bg-brand-600 text-white font-semibold'
+                    ? 'button-primary font-semibold'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >

@@ -88,7 +88,7 @@ export const StudyModal: React.FC<StudyModalProps> = ({
               onClose();
               setActiveTab('subjects');
             }}
-            className="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-sm transition-all"
+            className="px-4 py-2.5 rounded-xl button-primary text-xs font-semibold shadow-sm transition-all"
           >
             + Cadastrar Primeira Matéria
           </button>
@@ -184,7 +184,7 @@ export const StudyModal: React.FC<StudyModalProps> = ({
           </button>
           <button
             type="submit"
-            className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-sm"
+            className="px-5 py-2.5 rounded-xl button-primary text-xs font-bold shadow-sm"
           >
             {editingSession ? 'Salvar Alterações' : 'Salvar Registro'}
           </button>

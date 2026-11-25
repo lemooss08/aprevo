@@ -82,7 +82,7 @@ export const SubjectsView: React.FC = () => {
 
         <button
           onClick={openCreateModal}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs shadow-sm transition-all hover:shadow-glow-sm"
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl button-primary font-semibold text-xs shadow-sm transition-all hover:shadow-glow-sm"
         >
           <Plus className="w-4 h-4" />
           <span>Nova Matéria</span>
@@ -99,7 +99,7 @@ export const SubjectsView: React.FC = () => {
           </p>
           <button
             onClick={openCreateModal}
-            className="px-4 py-2 rounded-xl bg-brand-600 text-white text-xs font-semibold"
+            className="px-4 py-2 rounded-xl button-primary text-xs font-semibold"
           >
             Adicionar Matéria
           </button>
@@ -253,7 +253,7 @@ export const SubjectsView: React.FC = () => {
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold"
+              className="px-5 py-2.5 rounded-xl button-primary text-xs font-bold"
             >
               {editingSubject ? 'Salvar Matéria' : 'Criar Matéria'}
             </button>

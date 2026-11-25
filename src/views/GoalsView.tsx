@@ -293,7 +293,7 @@ export const GoalsView: React.FC = () => {
           <div className="flex items-end">
             <button
               type="submit"
-              className="w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs shadow-sm transition-all"
+              className="w-full py-2.5 rounded-xl button-primary font-bold text-xs shadow-sm transition-all"
             >
               Salvar Novas Metas
             </button>

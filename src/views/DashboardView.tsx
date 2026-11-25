@@ -153,7 +153,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
           <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
             <button
               onClick={() => setActiveTab('timer')}
-              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs sm:text-sm shadow-glow-sm hover:shadow-glow transition-all"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-3 rounded-2xl button-primary font-bold text-xs sm:text-sm shadow-glow-sm hover:shadow-glow transition-all"
             >
               <Play className="w-4 h-4 fill-current" />
               <span>Cronômetro</span>
@@ -188,7 +188,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
           </div>
           <button
             onClick={() => setActiveTab('subjects')}
-            className="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 dark:hover:bg-brand-500 text-[#fff] text-xs font-bold transition-all shadow-sm whitespace-nowrap active:scale-[0.98]"
+            className="px-4 py-2.5 rounded-xl button-primary text-xs font-bold transition-all shadow-sm whitespace-nowrap active:scale-[0.98]"
           >
             + Criar Primeira Matéria
           </button>
@@ -435,7 +435,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
             </button>
             <button
               onClick={() => setActiveTab('timer')}
-              className="flex-1 py-2 rounded-xl bg-brand-600/20 hover:bg-brand-600/30 text-brand-300 text-xs font-semibold text-center transition-colors border border-brand-500/30"
+              className="flex-1 py-2 rounded-xl button-secondary text-xs font-semibold text-center transition-colors border"
             >
               Estudar Agora
             </button>
