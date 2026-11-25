@@ -81,7 +81,7 @@ export const StudyLogsView: React.FC<StudyLogsViewProps> = ({ onOpenCreate }) =>
   return (
     <div className="space-y-6">
       {/* Top action bar: Search & Filters */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-[#11131a] border border-[#232836] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 rounded-2xl bg-[#222222] border border-[#383838] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
         {/* Search bar */}
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -90,7 +90,7 @@ export const StudyLogsView: React.FC<StudyLogsViewProps> = ({ onOpenCreate }) =>
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por tópico, resumo ou anotação..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#161922] border border-[#282f42] text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#2c2c2c] border border-[#414141] text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors"
           />
         </div>
 
@@ -100,7 +100,7 @@ export const StudyLogsView: React.FC<StudyLogsViewProps> = ({ onOpenCreate }) =>
           <select
             value={selectedSubjectFilter}
             onChange={(e) => setSelectedSubjectFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-[#161922] border border-[#282f42] text-xs text-white focus:outline-none focus:border-brand-500 transition-colors"
+            className="px-3 py-2 rounded-xl bg-[#2c2c2c] border border-[#414141] text-xs text-white focus:outline-none focus:border-brand-500 transition-colors"
           >
             <option value="all">Todas as matérias</option>
             {subjects.map((sub) => (
@@ -114,7 +114,7 @@ export const StudyLogsView: React.FC<StudyLogsViewProps> = ({ onOpenCreate }) =>
           <select
             value={selectedPeriodFilter}
             onChange={(e) => setSelectedPeriodFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-[#161922] border border-[#282f42] text-xs text-white focus:outline-none focus:border-brand-500 transition-colors"
+            className="px-3 py-2 rounded-xl bg-[#2c2c2c] border border-[#414141] text-xs text-white focus:outline-none focus:border-brand-500 transition-colors"
           >
             <option value="all">Todo o período</option>
             <option value="today">Apenas Hoje</option>
@@ -149,7 +149,7 @@ export const StudyLogsView: React.FC<StudyLogsViewProps> = ({ onOpenCreate }) =>
 
       {/* Cards Grid */}
       {filteredSessions.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl bg-[#11131a] border border-dashed border-[#282f42]">
+        <div className="p-12 text-center rounded-2xl bg-[#222222] border border-dashed border-[#414141]">
           <BookOpen className="w-8 h-8 text-slate-500 mx-auto mb-3" />
           <h4 className="text-sm font-semibold text-slate-300">Nenhum registro encontrado</h4>
           <p className="text-xs text-slate-500 mt-1">
@@ -165,12 +165,12 @@ export const StudyLogsView: React.FC<StudyLogsViewProps> = ({ onOpenCreate }) =>
             return (
               <div
                 key={session.id}
-                className="group p-5 rounded-2xl bg-[#11131a] border border-[#232836] hover:border-[#32394c] transition-all flex flex-col justify-between"
+                className="group p-5 rounded-2xl bg-[#222222] border border-[#383838] hover:border-[#4c4c4c] transition-all flex flex-col justify-between"
               >
                 <div>
                   {/* Card Header: Subject Tag + Duration Badge */}
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#161922] border border-[#282f42] text-xs">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2c2c2c] border border-[#414141] text-xs">
                       <span
                         className="w-2.5 h-2.5 rounded-full shrink-0"
                         style={{ backgroundColor: color }}
@@ -184,7 +184,7 @@ export const StudyLogsView: React.FC<StudyLogsViewProps> = ({ onOpenCreate }) =>
                       <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-brand-500/10 text-brand-300 border border-brand-500/20 font-bold">
                         {formatSecondsToHuman(session.durationSeconds)}
                       </span>
-                      <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#161922]">
+                      <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#2c2c2c]">
                         {session.type === 'timer' ? 'Cronômetro' : 'Manual'}
                       </span>
                     </div>
@@ -197,14 +197,14 @@ export const StudyLogsView: React.FC<StudyLogsViewProps> = ({ onOpenCreate }) =>
 
                   {/* Notes / Summary */}
                   {session.notes && (
-                    <div className="mt-2.5 p-3 rounded-xl bg-[#161922] border border-[#202534] text-xs text-slate-300 leading-relaxed font-sans">
+                    <div className="mt-2.5 p-3 rounded-xl bg-[#2c2c2c] border border-[#343434] text-xs text-slate-300 leading-relaxed font-sans">
                       <p className="line-clamp-3">{session.notes}</p>
                     </div>
                   )}
                 </div>
 
                 {/* Card Footer: Date & Actions */}
-                <div className="mt-4 pt-3 border-t border-[#202534] flex items-center justify-between text-xs text-slate-400">
+                <div className="mt-4 pt-3 border-t border-[#343434] flex items-center justify-between text-xs text-slate-400">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-slate-500" />
                     <span>{formatDateBR(session.startedAt)}</span>
@@ -215,7 +215,7 @@ export const StudyLogsView: React.FC<StudyLogsViewProps> = ({ onOpenCreate }) =>
                   <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => openEditModal(session)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1c202c] transition-colors"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#303030] transition-colors"
                       title="Editar registro"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
@@ -256,7 +256,7 @@ export const StudyLogsView: React.FC<StudyLogsViewProps> = ({ onOpenCreate }) =>
         <div className="pt-2 flex items-center justify-end gap-3">
           <button
             onClick={() => setDeleteConfirmId(null)}
-            className="px-4 py-2 rounded-xl bg-[#1c202c] hover:bg-[#252b3b] text-slate-300 text-xs font-medium"
+            className="px-4 py-2 rounded-xl bg-[#303030] hover:bg-[#3c3c3c] text-slate-300 text-xs font-medium"
           >
             Cancelar
           </button>

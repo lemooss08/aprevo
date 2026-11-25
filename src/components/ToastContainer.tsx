@@ -18,10 +18,10 @@ export const ToastContainer: React.FC = () => {
             key={toast.id}
             className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-xl transition-all duration-300 animate-in slide-in-from-bottom-3 ${
               isSuccess
-                ? 'bg-white/95 border-emerald-500/30 text-slate-100 dark:bg-[#111827]/95'
+                ? 'bg-white/95 border-emerald-500/30 text-slate-100 dark:bg-[#282828]/95'
                 : isError
                 ? 'bg-white/95 border-rose-500/30 text-slate-100 dark:bg-[#1f1315]/95'
-                : 'bg-white/95 border-violet-500/30 text-slate-100 dark:bg-[#121124]/95'
+                : 'bg-white/95 border-violet-500/30 text-slate-100 dark:bg-[#242424]/95'
             }`}
           >
             <div className="mt-0.5 shrink-0">
@@ -37,7 +37,7 @@ export const ToastContainer: React.FC = () => {
 
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors p-1 -mr-1 -mt-1 rounded-lg"
+              className="text-slate-400 hover:text-neutral-900 dark:hover:text-slate-200 transition-colors p-1 -mr-1 -mt-1 rounded-lg"
               aria-label="Fechar"
             >
               <X className="w-4 h-4" />

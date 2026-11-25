@@ -234,7 +234,7 @@ export const StatsView: React.FC = () => {
       {/* KPI Highlights Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total horas */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836]">
+        <div className="p-5 rounded-2xl bg-[#222222] border border-[#383838]">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Total Dedicado</span>
             <div className="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center">
@@ -250,7 +250,7 @@ export const StatsView: React.FC = () => {
         </div>
 
         {/* Média diária */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836]">
+        <div className="p-5 rounded-2xl bg-[#222222] border border-[#383838]">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Média Diária</span>
             <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
@@ -266,7 +266,7 @@ export const StatsView: React.FC = () => {
         </div>
 
         {/* Dia mais produtivo */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836]">
+        <div className="p-5 rounded-2xl bg-[#222222] border border-[#383838]">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Dia Mais Produtivo</span>
             <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
@@ -282,7 +282,7 @@ export const StatsView: React.FC = () => {
         </div>
 
         {/* Matéria Top */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836]">
+        <div className="p-5 rounded-2xl bg-[#222222] border border-[#383838]">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Matéria Mais Estudada</span>
             <div
@@ -304,7 +304,7 @@ export const StatsView: React.FC = () => {
       </div>
 
       {/* GitHub-like Contribution Heatmap */}
-      <div className="p-6 rounded-2xl bg-[#11131a] border border-[#232836]">
+      <div className="p-6 rounded-2xl bg-[#222222] border border-[#383838]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div>
             <h3 className="text-base font-bold text-white flex items-center gap-2">
@@ -319,7 +319,7 @@ export const StatsView: React.FC = () => {
           {/* Intensity Legend */}
           <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
             <span>Menos</span>
-            <span className="w-3 h-3 rounded-sm bg-[#161922] border border-[#232836]" />
+            <span className="w-3 h-3 rounded-sm bg-[#2c2c2c] border border-[#383838]" />
             <span className="w-3 h-3 rounded-sm bg-[#3b1979]" />
             <span className="w-3 h-3 rounded-sm bg-[#6d28d9]" />
             <span className="w-3 h-3 rounded-sm bg-[#8b5cf6]" />
@@ -333,7 +333,7 @@ export const StatsView: React.FC = () => {
           <div className="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[680px]">
             {heatmapData.map((day, idx) => {
               const bgColors = [
-                'bg-[#161922] border border-[#232836]/60', // 0
+                'bg-[#2c2c2c] border border-[#383838]/60', // 0
                 'bg-[#3b1979]', // 1
                 'bg-[#6d28d9]', // 2
                 'bg-[#8b5cf6]', // 3
@@ -357,7 +357,7 @@ export const StatsView: React.FC = () => {
       {/* 2-Columns: Subject Distribution & Temporal Evolution */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Column: Donut Chart - Matérias */}
-        <div className="p-6 rounded-2xl bg-[#11131a] border border-[#232836] flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-[#222222] border border-[#383838] flex flex-col justify-between">
           <div className="mb-4">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
               <PieIcon className="w-4 h-4 text-brand-400" />
@@ -384,7 +384,7 @@ export const StatsView: React.FC = () => {
                     dataKey="value"
                   >
                     {subjectChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} stroke="#11131a" strokeWidth={2} />
+                      <Cell key={`cell-${index}`} fill={entry.color} stroke="#222222" strokeWidth={2} />
                     ))}
                   </Pie>
                   <Tooltip
@@ -392,7 +392,7 @@ export const StatsView: React.FC = () => {
                       if (active && payload && payload.length) {
                         const data = payload[0].payload;
                         return (
-                          <div className="p-3 bg-[#0f1118] border border-[#232836] rounded-xl text-xs">
+                          <div className="p-3 bg-[#1e1e1e] border border-[#383838] rounded-xl text-xs">
                             <p className="font-semibold text-white">{data.name}</p>
                             <p className="text-brand-300 font-mono mt-0.5">
                               {data.value}h ({data.minutes} min)
@@ -415,7 +415,7 @@ export const StatsView: React.FC = () => {
         </div>
 
         {/* Right Column: Bar Chart - Evolução Semanal / Mensal */}
-        <div className="p-6 rounded-2xl bg-[#11131a] border border-[#232836] flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-[#222222] border border-[#383838] flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-base font-bold text-white flex items-center gap-2">
@@ -426,7 +426,7 @@ export const StatsView: React.FC = () => {
             </div>
 
             {/* Toggle Weekly vs Monthly */}
-            <div className="flex items-center p-0.5 rounded-lg bg-[#161922] border border-[#282f42] text-xs">
+            <div className="flex items-center p-0.5 rounded-lg bg-[#2c2c2c] border border-[#414141] text-xs">
               <button
                 onClick={() => setActiveTabMetric('weekly')}
                 className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
@@ -456,19 +456,19 @@ export const StatsView: React.FC = () => {
                 data={activeTabMetric === 'weekly' ? weeklyChartData : monthlyChartData}
                 margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2433" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#323232" vertical={false} />
                 <XAxis
                   dataKey="name"
                   stroke="#64748b"
                   fontSize={12}
                   tickLine={false}
-                  axisLine={{ stroke: '#232836' }}
+                  axisLine={{ stroke: '#383838' }}
                 />
                 <YAxis
                   stroke="#64748b"
                   fontSize={12}
                   tickLine={false}
-                  axisLine={{ stroke: '#232836' }}
+                  axisLine={{ stroke: '#383838' }}
                   tickFormatter={(v) => `${v}h`}
                 />
                 <Tooltip
@@ -476,7 +476,7 @@ export const StatsView: React.FC = () => {
                     if (active && payload && payload.length) {
                       const data = payload[0].payload;
                       return (
-                        <div className="p-3 bg-[#0f1118] border border-[#232836] rounded-xl text-xs">
+                        <div className="p-3 bg-[#1e1e1e] border border-[#383838] rounded-xl text-xs">
                           <p className="font-semibold text-white">{data.name}</p>
                           <p className="text-brand-300 font-mono mt-0.5">
                             {data.horas}h ({data.minutos} min)

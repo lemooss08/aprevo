@@ -22,7 +22,7 @@ const MainLayout: React.FC = () => {
   const [isCreateStudyModalOpen, setIsCreateStudyModalOpen] = useState<boolean>(false);
 
   return (
-    <div className="min-h-screen flex bg-[#f8fafc] dark:bg-[#000000] text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-500 selection:text-white pb-16 md:pb-0 transition-colors duration-200">
+    <div className="min-h-screen flex bg-[#f8fafc] dark:bg-[#161616] text-neutral-900 dark:text-slate-100 font-sans selection:bg-brand-500 selection:text-white pb-16 md:pb-0 transition-colors duration-200">
       {/* Collapsible / Responsive Sidebar */}
       <Sidebar
         isCollapsed={isSidebarCollapsed}

@@ -125,7 +125,7 @@ export const CalendarView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Controls & Navigation */}
-      <div className="p-5 rounded-3xl bg-[#11131a] border border-[#232836] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="p-5 rounded-3xl bg-[#222222] border border-[#383838] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-brand-500/10 text-brand-400 flex items-center justify-center">
             <CalendarIcon className="w-5 h-5" />
@@ -143,15 +143,15 @@ export const CalendarView: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={goToToday}
-            className="px-3 py-1.5 rounded-xl bg-[#161922] hover:bg-[#202534] text-slate-300 text-xs font-semibold border border-[#282f42] transition-colors"
+            className="px-3 py-1.5 rounded-xl bg-[#2c2c2c] hover:bg-[#343434] text-slate-300 text-xs font-semibold border border-[#414141] transition-colors"
           >
             Hoje
           </button>
-          <div className="flex items-center rounded-xl bg-[#161922] border border-[#282f42] p-0.5">
+          <div className="flex items-center rounded-xl bg-[#2c2c2c] border border-[#414141] p-0.5">
             <button
               onClick={prevMonth}
               aria-label="Mês anterior"
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#202534] transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#343434] transition-colors"
               title="Mês anterior"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -159,7 +159,7 @@ export const CalendarView: React.FC = () => {
             <button
               onClick={nextMonth}
               aria-label="Próximo mês"
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#202534] transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#343434] transition-colors"
               title="Próximo mês"
             >
               <ChevronRight className="w-4 h-4" />
@@ -169,7 +169,7 @@ export const CalendarView: React.FC = () => {
       </div>
 
       {/* Calendar Grid Container */}
-      <div className="p-4 sm:p-6 rounded-3xl bg-[#11131a] border border-[#232836] shadow-md">
+      <div className="p-4 sm:p-6 rounded-3xl bg-[#222222] border border-[#383838] shadow-md">
         {/* Week Day Header */}
         <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2 text-center">
           {weekDayLabels.map((day, idx) => (
@@ -194,10 +194,10 @@ export const CalendarView: React.FC = () => {
                 aria-label={`Dia ${item.date.getDate()}${hasStudy ? `, ${formatSecondsToHuman(stats.totalSeconds)} estudados` : ''}`}
                 className={`relative min-h-[72px] sm:min-h-[96px] p-2 rounded-2xl border text-left transition-all flex flex-col justify-between ${
                   !item.isCurrentMonth
-                    ? 'opacity-30 bg-[#0e1017] border-[#1c202c]'
+                    ? 'opacity-30 bg-[#1d1d1d] border-[#303030]'
                     : hasStudy
-                    ? 'bg-[#151724] border-brand-500/30 hover:border-brand-500 hover:shadow-glow-sm'
-                    : 'bg-[#11131a] border-[#202534] hover:bg-[#161922]'
+                    ? 'bg-[#2a2a2a] border-brand-500/30 hover:border-brand-500 hover:shadow-glow-sm'
+                    : 'bg-[#222222] border-[#343434] hover:bg-[#2c2c2c]'
                 } ${isToday ? 'ring-2 ring-brand-500' : ''}`}
               >
                 {/* Day Number + Goal Trophy */}
@@ -276,7 +276,7 @@ export const CalendarView: React.FC = () => {
               return (
                 <div
                   key={sess.id}
-                  className="p-3.5 rounded-xl bg-[#161922] border border-[#232836] flex items-start gap-3"
+                  className="p-3.5 rounded-xl bg-[#2c2c2c] border border-[#383838] flex items-start gap-3"
                 >
                   <span
                     className="w-2.5 h-2.5 rounded-full mt-1.5 shrink-0"

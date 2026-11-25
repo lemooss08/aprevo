@@ -70,7 +70,7 @@ export const SubjectsView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Header Card */}
-      <div className="p-6 rounded-2xl bg-[#11131a] border border-[#232836] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="p-6 rounded-2xl bg-[#222222] border border-[#383838] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
             Gerenciamento de Matérias
@@ -91,7 +91,7 @@ export const SubjectsView: React.FC = () => {
 
       {/* Subjects Grid */}
       {subjects.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl bg-[#11131a] border border-dashed border-[#282f42]">
+        <div className="p-12 text-center rounded-2xl bg-[#222222] border border-dashed border-[#414141]">
           <FolderKanban className="w-8 h-8 text-slate-500 mx-auto mb-3" />
           <h4 className="text-sm font-semibold text-slate-300">Nenhuma matéria cadastrada</h4>
           <p className="text-xs text-slate-500 mt-1 mb-4">
@@ -112,7 +112,7 @@ export const SubjectsView: React.FC = () => {
             return (
               <div
                 key={sub.id}
-                className="group p-5 rounded-2xl bg-[#11131a] border border-[#232836] hover:border-[#32394c] transition-all flex flex-col justify-between"
+                className="group p-5 rounded-2xl bg-[#222222] border border-[#383838] hover:border-[#4c4c4c] transition-all flex flex-col justify-between"
               >
                 <div>
                   {/* Top bar with color pill and action buttons */}
@@ -130,7 +130,7 @@ export const SubjectsView: React.FC = () => {
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => openEditModal(sub)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1c202c] transition-colors"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#303030] transition-colors"
                         title="Editar matéria"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -153,8 +153,8 @@ export const SubjectsView: React.FC = () => {
                 </div>
 
                 {/* Metrics Box */}
-                <div className="mt-5 pt-4 border-t border-[#202534] grid grid-cols-2 gap-2">
-                  <div className="p-2.5 rounded-xl bg-[#161922] border border-[#202534]">
+                <div className="mt-5 pt-4 border-t border-[#343434] grid grid-cols-2 gap-2">
+                  <div className="p-2.5 rounded-xl bg-[#2c2c2c] border border-[#343434]">
                     <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
                       <Clock className="w-3 h-3" />
                       <span>Tempo Total</span>
@@ -164,7 +164,7 @@ export const SubjectsView: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="p-2.5 rounded-xl bg-[#161922] border border-[#202534]">
+                  <div className="p-2.5 rounded-xl bg-[#2c2c2c] border border-[#343434]">
                     <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
                       <Layers className="w-3 h-3" />
                       <span>Sessões</span>
@@ -198,7 +198,7 @@ export const SubjectsView: React.FC = () => {
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="Ex: Inteligência Artificial, Cálculo, História..."
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
             />
           </div>
 
@@ -239,7 +239,7 @@ export const SubjectsView: React.FC = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Breve resumo do conteúdo programático ou livros de apoio..."
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 resize-none"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 resize-none"
             />
           </div>
 
@@ -247,7 +247,7 @@ export const SubjectsView: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2.5 rounded-xl bg-[#1c202c] hover:bg-[#252b3b] text-slate-300 text-xs font-medium"
+              className="px-4 py-2.5 rounded-xl bg-[#303030] hover:bg-[#3c3c3c] text-slate-300 text-xs font-medium"
             >
               Cancelar
             </button>
@@ -272,7 +272,7 @@ export const SubjectsView: React.FC = () => {
         <div className="pt-2 flex items-center justify-end gap-3">
           <button
             onClick={() => setDeleteConfirmId(null)}
-            className="px-4 py-2 rounded-xl bg-[#1c202c] hover:bg-[#252b3b] text-slate-300 text-xs font-medium"
+            className="px-4 py-2 rounded-xl bg-[#303030] hover:bg-[#3c3c3c] text-slate-300 text-xs font-medium"
           >
             Cancelar
           </button>

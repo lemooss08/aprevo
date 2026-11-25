@@ -77,7 +77,7 @@ export const StudyModal: React.FC<StudyModalProps> = ({
       description="Salve os detalhes do que você estudou para manter seu histórico sempre atualizado"
     >
       {subjects.length === 0 ? (
-        <div className="text-center py-6 px-4 bg-[#161922] rounded-2xl border border-dashed border-[#282f42]">
+        <div className="text-center py-6 px-4 bg-[#2c2c2c] rounded-2xl border border-dashed border-[#414141]">
           <p className="text-sm font-semibold text-slate-200">Nenhuma matéria cadastrada</p>
           <p className="text-xs text-slate-400 mt-1 mb-4">
             Para registrar conteúdos estudados, primeiro crie sua primeira matéria ou disciplina.
@@ -104,7 +104,7 @@ export const StudyModal: React.FC<StudyModalProps> = ({
             value={formSubjectId}
             onChange={(e) => setFormSubjectId(e.target.value)}
             required
-            className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white focus:outline-none focus:border-brand-500"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white focus:outline-none focus:border-brand-500"
           >
             {subjects.map((sub) => (
               <option key={sub.id} value={sub.id}>
@@ -125,7 +125,7 @@ export const StudyModal: React.FC<StudyModalProps> = ({
             onChange={(e) => setFormTopic(e.target.value)}
             required
             placeholder="Ex: Resolução de exercícios de Álgebra Linear"
-            className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
           />
         </div>
 
@@ -142,7 +142,7 @@ export const StudyModal: React.FC<StudyModalProps> = ({
               value={formMinutes}
               onChange={(e) => setFormMinutes(Math.max(1, parseInt(e.target.value) || 0))}
               required
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white focus:outline-none focus:border-brand-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white focus:outline-none focus:border-brand-500"
             />
           </div>
           <div>
@@ -154,7 +154,7 @@ export const StudyModal: React.FC<StudyModalProps> = ({
               value={formDate}
               onChange={(e) => setFormDate(e.target.value)}
               required
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white focus:outline-none focus:border-brand-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white focus:outline-none focus:border-brand-500"
             />
           </div>
         </div>
@@ -169,7 +169,7 @@ export const StudyModal: React.FC<StudyModalProps> = ({
             value={formNotes}
             onChange={(e) => setFormNotes(e.target.value)}
             placeholder="Principais fórmulas, insights, dúvidas pendentes..."
-            className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 resize-none"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 resize-none"
           />
         </div>
 
@@ -178,7 +178,7 @@ export const StudyModal: React.FC<StudyModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2.5 rounded-xl bg-[#1c202c] hover:bg-[#252b3b] text-slate-300 text-xs font-medium"
+            className="px-4 py-2.5 rounded-xl bg-[#303030] hover:bg-[#3c3c3c] text-slate-300 text-xs font-medium"
           >
             Cancelar
           </button>

@@ -5,7 +5,7 @@ import { FirebaseError } from 'firebase/app';
 import { firebaseAuth } from '../services/firebase';
 import { usernameToEmail } from '../services/accountName';
 
-const inputClass = 'w-full rounded-xl border border-slate-700 bg-[#0e1017] px-4 py-3 text-sm text-white outline-none focus:border-brand-400';
+const inputClass = 'w-full rounded-xl border border-neutral-700 bg-[#1d1d1d] px-4 py-3 text-sm text-white outline-none focus:border-brand-400';
 
 export function AccountGate({ children }: { children: (user: User | null) => ReactNode }) {
   const [user, setUser] = useState<User | null | undefined>(undefined);
@@ -59,8 +59,8 @@ export function AccountGate({ children }: { children: (user: User | null) => Rea
   if (user) return children(user);
 
   return (
-    <main className="grid min-h-screen place-items-center bg-[#000000] px-4 py-10 text-slate-100">
-      <section className="w-full max-w-md rounded-3xl border border-[#282f42] bg-[#11131a] p-6 shadow-xl sm:p-8">
+    <main className="grid min-h-screen place-items-center bg-[#161616] px-4 py-10 text-slate-100">
+      <section className="w-full max-w-md rounded-3xl border border-[#414141] bg-[#222222] p-6 shadow-xl sm:p-8">
         <div className="mb-7 flex items-center gap-3 text-brand-300">
           <BookOpen aria-hidden="true" className="h-6 w-6" />
           <span className="text-lg font-black tracking-wide text-white">APREVO</span>

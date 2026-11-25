@@ -101,7 +101,7 @@ export const GoalsView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Banner: Streak and Overview */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-[#18122c] via-[#12141f] to-[#10121a] border border-brand-500/30 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-[#18122c] via-[#252525] to-[#212121] border border-brand-500/30 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-glow-sm">
             <Flame className="w-8 h-8 fill-amber-400/20" />
@@ -132,7 +132,7 @@ export const GoalsView: React.FC = () => {
       {/* 2-Columns: Daily & Weekly Progress Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Meta Diária Card */}
-        <div className="p-6 rounded-3xl bg-[#11131a] border border-[#232836] flex flex-col justify-between">
+        <div className="p-6 rounded-3xl bg-[#222222] border border-[#383838] flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
@@ -166,7 +166,7 @@ export const GoalsView: React.FC = () => {
               </div>
 
               {/* Progress Bar */}
-              <div className="w-full h-3 rounded-full bg-[#1c202c] overflow-hidden p-0.5">
+              <div className="w-full h-3 rounded-full bg-[#303030] overflow-hidden p-0.5">
                 <div
                   className={`h-full rounded-full transition-all duration-700 ${
                     isDailyGoalAchieved
@@ -179,7 +179,7 @@ export const GoalsView: React.FC = () => {
             </div>
           </div>
 
-          <p className="text-xs text-slate-400 pt-3 border-t border-[#232836]">
+          <p className="text-xs text-slate-400 pt-3 border-t border-[#383838]">
             {isDailyGoalAchieved
               ? 'Parabéns! Você já superou sua meta de hoje. Continue se desejar!'
               : `Faltam ${Math.max(0, Math.round((dailyGoalSeconds - todaySeconds) / 60))} minutos para completar a meta diária.`}
@@ -187,7 +187,7 @@ export const GoalsView: React.FC = () => {
         </div>
 
         {/* Meta Semanal Card */}
-        <div className="p-6 rounded-3xl bg-[#11131a] border border-[#232836] flex flex-col justify-between">
+        <div className="p-6 rounded-3xl bg-[#222222] border border-[#383838] flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
@@ -221,7 +221,7 @@ export const GoalsView: React.FC = () => {
               </div>
 
               {/* Progress Bar */}
-              <div className="w-full h-3 rounded-full bg-[#1c202c] overflow-hidden p-0.5">
+              <div className="w-full h-3 rounded-full bg-[#303030] overflow-hidden p-0.5">
                 <div
                   className={`h-full rounded-full transition-all duration-700 ${
                     isWeeklyGoalAchieved
@@ -234,7 +234,7 @@ export const GoalsView: React.FC = () => {
             </div>
           </div>
 
-          <p className="text-xs text-slate-400 pt-3 border-t border-[#232836]">
+          <p className="text-xs text-slate-400 pt-3 border-t border-[#383838]">
             {isWeeklyGoalAchieved
               ? 'Incrível! Meta semanal conquistada com louvor.'
               : `Faltam ${formatSecondsToHuman(Math.max(0, weeklyGoalSeconds - weekSeconds))} para a meta semanal.`}
@@ -243,7 +243,7 @@ export const GoalsView: React.FC = () => {
       </div>
 
       {/* Adjust Goals Form */}
-      <div className="p-6 rounded-3xl bg-[#11131a] border border-[#232836]">
+      <div className="p-6 rounded-3xl bg-[#222222] border border-[#383838]">
         <h4 className="text-base font-bold text-white mb-1">Ajustar Metas de Estudo</h4>
         <p className="text-xs text-slate-400 mb-5">
           Defina tempos desafiadores e sustentáveis de acordo com a sua rotina diária
@@ -262,7 +262,7 @@ export const GoalsView: React.FC = () => {
                 step={5}
                 value={dailyMinutesInput}
                 onChange={(e) => setDailyMinutesInput(parseInt(e.target.value) || 0)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white focus:outline-none focus:border-brand-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white focus:outline-none focus:border-brand-500"
               />
               <span className="absolute right-3.5 top-3 text-xs text-slate-500 font-medium">
                 ({(dailyMinutesInput / 60).toFixed(1)}h)
@@ -282,7 +282,7 @@ export const GoalsView: React.FC = () => {
                 step={30}
                 value={weeklyMinutesInput}
                 onChange={(e) => setWeeklyMinutesInput(parseInt(e.target.value) || 0)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white focus:outline-none focus:border-brand-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white focus:outline-none focus:border-brand-500"
               />
               <span className="absolute right-3.5 top-3 text-xs text-slate-500 font-medium">
                 ({(weeklyMinutesInput / 60).toFixed(1)}h)
@@ -302,7 +302,7 @@ export const GoalsView: React.FC = () => {
       </div>
 
       {/* Conquistas & Marcos */}
-      <div className="p-6 rounded-3xl bg-[#11131a] border border-[#232836]">
+      <div className="p-6 rounded-3xl bg-[#222222] border border-[#383838]">
         <h4 className="text-base font-bold text-white mb-1 flex items-center gap-2">
           <Trophy className="w-4 h-4 text-amber-400" />
           Marcos & Conquistas
@@ -319,15 +319,15 @@ export const GoalsView: React.FC = () => {
                 key={idx}
                 className={`p-4 rounded-2xl border transition-all flex items-start gap-3 ${
                   item.unlocked
-                    ? 'bg-[#151924] border-brand-500/30'
-                    : 'bg-[#11131a] border-[#202534] opacity-50'
+                    ? 'bg-[#2b2b2b] border-brand-500/30'
+                    : 'bg-[#222222] border-[#343434] opacity-50'
                 }`}
               >
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
                     item.unlocked
                       ? 'bg-brand-500/20 text-brand-300 border border-brand-500/30'
-                      : 'bg-slate-800 text-slate-500'
+                      : 'bg-neutral-800 text-slate-500'
                   }`}
                 >
                   <Icon className="w-5 h-5" />

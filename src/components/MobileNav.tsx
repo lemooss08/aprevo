@@ -23,7 +23,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({ onOpenMenu }) => {
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0c0e14]/95 backdrop-blur-lg border-t border-[#232836] px-2 py-1.5 flex items-center justify-around safe-bottom">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#1b1b1b]/95 backdrop-blur-lg border-t border-[#383838] px-2 py-1.5 flex items-center justify-around safe-bottom">
       {items.map((item) => {
         const Icon = item.icon;
         const isActive = activeTab === item.id;

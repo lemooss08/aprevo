@@ -22,12 +22,12 @@ export default {
           950: '#2e1065',
         },
         dark: {
-          bg: '#000000',
-          surface: '#11131a',
-          card: '#161922',
-          cardHover: '#1c202c',
-          border: '#232836',
-          borderHover: '#32394c',
+          bg: '#161616',
+          surface: '#222222',
+          card: '#2c2c2c',
+          cardHover: '#303030',
+          border: '#383838',
+          borderHover: '#4c4c4c',
           muted: '#8b949e',
         }
       },

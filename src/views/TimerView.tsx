@@ -75,9 +75,9 @@ export const TimerView: React.FC = () => {
         className={`relative overflow-hidden rounded-3xl p-8 sm:p-12 border transition-all duration-300 text-center flex flex-col items-center justify-center ${
           activeTimer
             ? isTimerRunning
-              ? 'bg-gradient-to-b from-[#141226] via-[#10111a] to-[#0c0e14] border-brand-500/50 shadow-glow ring-4 ring-brand-500/10'
-              : 'bg-[#11131a] border-amber-500/30 shadow-md ring-2 ring-amber-500/10'
-            : 'bg-[#11131a] border-[#232836] shadow-sm'
+              ? 'bg-gradient-to-b from-[#141226] via-[#202020] to-[#1b1b1b] border-brand-500/50 shadow-glow ring-4 ring-brand-500/10'
+              : 'bg-[#222222] border-amber-500/30 shadow-md ring-2 ring-amber-500/10'
+            : 'bg-[#222222] border-[#383838] shadow-sm'
         }`}
       >
         {/* Glow ambient background element */}
@@ -100,7 +100,7 @@ export const TimerView: React.FC = () => {
               </span>
             )
           ) : (
-            <span className="flex items-center gap-2 bg-[#161922] text-slate-400 border border-[#232836] px-3.5 py-1.5 rounded-full">
+            <span className="flex items-center gap-2 bg-[#2c2c2c] text-slate-400 border border-[#383838] px-3.5 py-1.5 rounded-full">
               <span className="w-2 h-2 rounded-full bg-slate-400" />
               Pronto para Iniciar
             </span>
@@ -110,7 +110,7 @@ export const TimerView: React.FC = () => {
         {/* Current Active Info */}
         {activeTimer && (
           <div className="mb-6 max-w-lg">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#181c28] border border-[#2a3144] text-xs mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#2e2e2e] border border-[#434343] text-xs mb-2">
               <span
                 className="w-2.5 h-2.5 rounded-full"
                 style={{ backgroundColor: activeSubject?.color || '#8b5cf6' }}
@@ -178,7 +178,7 @@ export const TimerView: React.FC = () => {
               {/* Discard Session */}
               <button
                 onClick={() => setShowDiscardConfirm(true)}
-                className="flex items-center gap-2 px-4 py-3.5 rounded-2xl bg-[#1c202c] hover:bg-rose-950/60 hover:text-rose-400 text-slate-400 border border-[#2a3042] font-semibold text-sm transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
+                className="flex items-center gap-2 px-4 py-3.5 rounded-2xl bg-[#303030] hover:bg-rose-950/60 hover:text-rose-400 text-slate-400 border border-[#424242] font-semibold text-sm transition-all duration-200 cursor-pointer active:scale-[0.98] min-h-[44px]"
                 title="Descartar sem salvar"
               >
                 <RotateCcw className="w-4 h-4" />
@@ -203,7 +203,7 @@ export const TimerView: React.FC = () => {
               </button>
               <button
                 onClick={() => setShowDiscardConfirm(false)}
-                className="px-4 py-2 rounded-lg bg-[#1c202c] hover:bg-[#252b3b] text-slate-300 text-xs font-medium cursor-pointer active:scale-[0.98] min-h-[36px]"
+                className="px-4 py-2 rounded-lg bg-[#303030] hover:bg-[#3c3c3c] text-slate-300 text-xs font-medium cursor-pointer active:scale-[0.98] min-h-[36px]"
               >
                 Voltar
               </button>
@@ -214,7 +214,7 @@ export const TimerView: React.FC = () => {
 
       {/* Form Section: Start New Session (when inactive) */}
       {!activeTimer && (
-        <div id="start-form" className="p-6 sm:p-8 rounded-3xl bg-[#11131a] border border-[#232836] shadow-sm">
+        <div id="start-form" className="p-6 sm:p-8 rounded-3xl bg-[#222222] border border-[#383838] shadow-sm">
           <div className="flex items-center gap-2.5 mb-6">
             <div className="w-9 h-9 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center">
               <Sparkles className="w-5 h-5" />
@@ -230,7 +230,7 @@ export const TimerView: React.FC = () => {
           </div>
 
           {/* Quick Preset Focus Modes */}
-          <div className="mb-5 p-3.5 rounded-2xl bg-[#161922] border border-[#232836]">
+          <div className="mb-5 p-3.5 rounded-2xl bg-[#2c2c2c] border border-[#383838]">
             <span className="text-[11px] font-semibold text-slate-400 block mb-2 uppercase tracking-wider">
               Modos Rápidos de Estudo (Clique para aplicar):
             </span>
@@ -238,7 +238,7 @@ export const TimerView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => applyPreset('Técnica Pomodoro (25m)')}
-                className="px-3 py-1.5 rounded-xl bg-[#202534] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#2b3346] transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-xl bg-[#343434] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#454545] transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <Zap className="w-3.5 h-3.5 text-amber-400" />
                 <span>Pomodoro (25m)</span>
@@ -246,7 +246,7 @@ export const TimerView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => applyPreset('Deep Work (50m)')}
-                className="px-3 py-1.5 rounded-xl bg-[#202534] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#2b3346] transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-xl bg-[#343434] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#454545] transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <Target className="w-3.5 h-3.5 text-brand-400" />
                 <span>Deep Work (50m)</span>
@@ -254,7 +254,7 @@ export const TimerView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => applyPreset('Ultra Focus (90m)')}
-                className="px-3 py-1.5 rounded-xl bg-[#202534] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#2b3346] transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-xl bg-[#343434] hover:bg-brand-600/20 text-slate-300 hover:text-brand-300 text-xs font-medium border border-[#454545] transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <Flame className="w-3.5 h-3.5 text-rose-400" />
                 <span>Ultra Focus (90m)</span>
@@ -263,7 +263,7 @@ export const TimerView: React.FC = () => {
           </div>
 
           {subjects.length === 0 ? (
-            <div className="text-center py-6 bg-[#161922] rounded-2xl border border-dashed border-[#2d3447]">
+            <div className="text-center py-6 bg-[#2c2c2c] rounded-2xl border border-dashed border-[#474747]">
               <p className="text-sm text-slate-300 font-medium">Você precisa cadastrar ao menos uma matéria.</p>
               <button
                 onClick={() => setActiveTab('subjects')}
@@ -286,7 +286,7 @@ export const TimerView: React.FC = () => {
                       value={selectedSubjectId}
                       onChange={(e) => setSelectedSubjectId(e.target.value)}
                       required
-                      className="w-full px-3.5 py-3 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white focus:outline-none focus:border-brand-500 transition-colors"
+                      className="w-full px-3.5 py-3 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white focus:outline-none focus:border-brand-500 transition-colors"
                     >
                       {subjects.map((sub) => (
                         <option key={sub.id} value={sub.id}>
@@ -314,7 +314,7 @@ export const TimerView: React.FC = () => {
                     onChange={(e) => setTopic(e.target.value)}
                     required
                     placeholder="Ex: Resolução de Exercícios, Leitura do Cap. 4..."
-                    className="w-full px-3.5 py-3 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors"
+                    className="w-full px-3.5 py-3 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors"
                   />
                 </div>
               </div>
@@ -329,7 +329,7 @@ export const TimerView: React.FC = () => {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Anotações prévias, metas da sessão ou referências de leitura..."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors resize-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors resize-none"
                 />
               </div>
 
@@ -348,7 +348,7 @@ export const TimerView: React.FC = () => {
       )}
 
       {/* Sessões Concluídas Hoje */}
-      <div className="p-6 rounded-3xl bg-[#11131a] border border-[#232836] shadow-sm">
+      <div className="p-6 rounded-3xl bg-[#222222] border border-[#383838] shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-base font-bold text-white flex items-center gap-2">
@@ -376,7 +376,7 @@ export const TimerView: React.FC = () => {
               return (
                 <div
                   key={s.id}
-                  className="p-3.5 rounded-xl bg-[#161922] border border-[#232836] flex items-center justify-between gap-4 card-hover"
+                  className="p-3.5 rounded-xl bg-[#2c2c2c] border border-[#383838] flex items-center justify-between gap-4 card-hover"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <span

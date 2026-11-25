@@ -126,7 +126,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
   return (
     <div className="space-y-6">
       {/* Hero Banner: Boas-vindas APREVO */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-950 via-[#131622] to-[#12131b] border border-brand-500/25 p-6 sm:p-8 shadow-glow-sm">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-950 via-[#262626] to-[#232323] border border-brand-500/25 p-6 sm:p-8 shadow-glow-sm">
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/15 border border-brand-500/25 text-brand-300 text-xs font-semibold mb-3">
@@ -160,7 +160,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
             </button>
             <button
               onClick={onOpenNewStudy}
-              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#1c202c] hover:bg-[#252b3b] text-slate-200 border border-[#2d3345] font-semibold text-xs sm:text-sm transition-all"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#303030] hover:bg-[#3c3c3c] text-slate-200 border border-[#464646] font-semibold text-xs sm:text-sm transition-all"
             >
               <BookOpen className="w-4 h-4" />
               <span>Registrar</span>
@@ -174,7 +174,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
 
       {/* Onboarding Callout if 0 subjects */}
       {subjects.length === 0 && (
-        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#131622] border border-brand-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-glow-sm">
+        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#262626] border border-brand-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-glow-sm">
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-300 flex items-center justify-center shrink-0">
               <FolderKanban className="w-5 h-5" />
@@ -198,7 +198,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Hoje */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836] card-hover">
+        <div className="p-5 rounded-2xl bg-[#222222] border border-[#383838] card-hover">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Tempo Hoje</span>
             <div className="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center">
@@ -216,7 +216,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
         </div>
 
         {/* Card 2: Esta Semana */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836] card-hover">
+        <div className="p-5 rounded-2xl bg-[#222222] border border-[#383838] card-hover">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Esta Semana</span>
             <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
@@ -234,7 +234,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
         </div>
 
         {/* Card 3: Total Acumulado */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836] card-hover">
+        <div className="p-5 rounded-2xl bg-[#222222] border border-[#383838] card-hover">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Total de Horas</span>
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
@@ -250,7 +250,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
         </div>
 
         {/* Card 4: Matéria Principal */}
-        <div className="p-5 rounded-2xl bg-[#11131a] border border-[#232836] card-hover">
+        <div className="p-5 rounded-2xl bg-[#222222] border border-[#383838] card-hover">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400">Disciplina Líder</span>
             <div
@@ -272,7 +272,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
       </div>
 
       {/* Meta Diária Barra Visual */}
-      <div className="p-6 rounded-2xl bg-[#11131a] border border-[#232836]">
+      <div className="p-6 rounded-2xl bg-[#222222] border border-[#383838]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
           <div>
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
@@ -291,7 +291,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
         </div>
 
         {/* Animated Progress Track */}
-        <div className="w-full h-3 rounded-full bg-[#1c202c] overflow-hidden p-0.5">
+        <div className="w-full h-3 rounded-full bg-[#303030] overflow-hidden p-0.5">
           <div
             className={`h-full rounded-full transition-all duration-700 ${
               goalMet
@@ -306,7 +306,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
       {/* 2-Columns: Chart 7 Days + Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Chart */}
-        <div className="lg:col-span-2 p-6 rounded-2xl bg-[#11131a] border border-[#232836] flex flex-col justify-between">
+        <div className="lg:col-span-2 p-6 rounded-2xl bg-[#222222] border border-[#383838] flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-base font-bold text-white">Tempo de Estudo (Últimos 7 dias)</h3>
@@ -330,19 +330,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
                     <stop offset="100%" stopColor="#6d28d9" stopOpacity={0.3} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2433" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#323232" vertical={false} />
                 <XAxis
                   dataKey="shortName"
                   stroke="#64748b"
                   fontSize={12}
                   tickLine={false}
-                  axisLine={{ stroke: '#232836' }}
+                  axisLine={{ stroke: '#383838' }}
                 />
                 <YAxis
                   stroke="#64748b"
                   fontSize={12}
                   tickLine={false}
-                  axisLine={{ stroke: '#232836' }}
+                  axisLine={{ stroke: '#383838' }}
                   tickFormatter={(val) => `${val}h`}
                 />
                 <Tooltip
@@ -350,7 +350,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
                     if (active && payload && payload.length) {
                       const data = payload[0].payload;
                       return (
-                        <div className="p-3 bg-[#0f1118] border border-[#232836] rounded-xl text-xs">
+                        <div className="p-3 bg-[#1e1e1e] border border-[#383838] rounded-xl text-xs">
                           <p className="font-semibold text-white mb-1">{data.name}</p>
                           <p className="text-brand-300 font-mono font-medium">
                             {data.horas}h ({data.minutos} min)
@@ -373,7 +373,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
         </div>
 
         {/* Right Column: Recent Activities */}
-        <div className="p-6 rounded-2xl bg-[#11131a] border border-[#232836] flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-[#222222] border border-[#383838] flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-bold text-white">Atividades Recentes</h3>
@@ -399,7 +399,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
                   return (
                     <div
                       key={session.id}
-                      className="p-3 rounded-xl bg-[#161922] border border-[#232836] hover:border-[#32394c] transition-all flex items-start gap-3"
+                      className="p-3 rounded-xl bg-[#2c2c2c] border border-[#383838] hover:border-[#4c4c4c] transition-all flex items-start gap-3"
                     >
                       <div
                         className="w-2.5 h-2.5 rounded-full mt-1.5 shrink-0"
@@ -426,10 +426,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewStudy }) 
             )}
           </div>
 
-          <div className="mt-4 pt-3 border-t border-[#232836] flex items-center gap-2">
+          <div className="mt-4 pt-3 border-t border-[#383838] flex items-center gap-2">
             <button
               onClick={() => setActiveTab('calendar')}
-              className="flex-1 py-2 rounded-xl bg-[#161922] hover:bg-[#202534] text-slate-300 text-xs font-medium text-center transition-colors border border-[#282f42]"
+              className="flex-1 py-2 rounded-xl bg-[#2c2c2c] hover:bg-[#343434] text-slate-300 text-xs font-medium text-center transition-colors border border-[#414141]"
             >
               Abrir Calendário
             </button>

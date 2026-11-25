@@ -65,12 +65,12 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 border-b border-[#232836] bg-[#0c0e14]/90 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between">
+    <header className="sticky top-0 z-30 h-16 border-b border-[#383838] bg-[#1b1b1b]/90 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between">
       {/* Left side: hamburger + title */}
       <div className="flex items-center gap-3">
         <button
           onClick={onOpenMobileMenu}
-          className="md:hidden text-slate-400 hover:text-white p-2 rounded-xl hover:bg-[#161922] transition-colors"
+          className="md:hidden text-slate-400 hover:text-white p-2 rounded-xl hover:bg-[#2c2c2c] transition-colors"
           aria-label="Abrir menu"
         >
           <Menu className="w-5 h-5" />
@@ -130,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={toggleTheme}
           aria-label={settings.theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
-          className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-xl text-slate-400 hover:text-white hover:bg-[#161922] transition-colors"
+          className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-xl text-slate-400 hover:text-white hover:bg-[#2c2c2c] transition-colors"
           title={settings.theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
         >
           {settings.theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}

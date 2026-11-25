@@ -62,13 +62,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Main Sidebar Container */}
       <aside
-        className={`fixed md:sticky top-0 left-0 z-40 h-screen transition-all duration-300 ease-in-out border-r border-[#232836] bg-[#0c0e14] flex flex-col justify-between ${
+        className={`fixed md:sticky top-0 left-0 z-40 h-screen transition-all duration-300 ease-in-out border-r border-[#383838] bg-[#1b1b1b] flex flex-col justify-between ${
           isMobileOpen ? 'translate-x-0 w-64' : '-translate-x-full md:translate-x-0'
         } ${isCollapsed ? 'md:w-20' : 'md:w-64'}`}
       >
         {/* Header / Logo APREVO */}
         <div>
-          <div className="h-16 flex items-center justify-between px-4 border-b border-[#232836]">
+          <div className="h-16 flex items-center justify-between px-4 border-b border-[#383838]">
             <div
               onClick={() => handleSelect('dashboard')}
               className="flex items-center gap-3 cursor-pointer select-none group"
@@ -77,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 via-brand-600 to-violet-400 flex items-center justify-center text-white shadow-glow-sm group-hover:shadow-glow transition-all">
                 <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
                   <path d="M4 20L12 4L15 4L20 20H16.5L14.8 15H9.2L7.5 20H4Z" fill="white" />
-                  <path d="M10.2 12H13.8L12 6.8L10.2 12Z" fill="#1e1b4b" />
+                  <path d="M10.2 12H13.8L12 6.8L10.2 12Z" fill="#242424" />
                 </svg>
               </div>
 
@@ -118,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-all duration-150 relative ${
                     isActive
                       ? 'bg-brand-600/15 text-brand-300 border border-brand-500/30 shadow-sm'
-                      : 'text-slate-400 hover:text-slate-100 hover:bg-[#161922] border border-transparent'
+                      : 'text-slate-400 hover:text-slate-100 hover:bg-[#2c2c2c] border border-transparent'
                   } ${isCollapsed && !isMobileOpen ? 'justify-center px-0' : ''}`}
                 >
                   <div className="relative">
@@ -148,12 +148,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Footer Area: Desktop collapse toggle */}
-        <div className="p-3 border-t border-[#232836] space-y-2">
+        <div className="p-3 border-t border-[#383838] space-y-2">
           {/* Desktop collapse toggle */}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             aria-label={isCollapsed ? 'Expandir menu lateral' : 'Recolher menu lateral'}
-            className="hidden md:flex w-full items-center justify-center gap-2 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#161922] transition-colors text-xs font-medium"
+            className="hidden md:flex w-full items-center justify-center gap-2 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#2c2c2c] transition-colors text-xs font-medium"
           >
             {isCollapsed ? (
               <ChevronRight className="w-4 h-4" />

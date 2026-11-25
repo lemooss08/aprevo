@@ -52,7 +52,7 @@ export const SettingsView: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <section className="rounded-3xl border border-[#232836] bg-[#11131a] p-6">
+      <section className="rounded-3xl border border-[#383838] bg-[#222222] p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h3 className="text-base font-bold text-white">Minha conta</h3>
@@ -70,13 +70,13 @@ export const SettingsView: React.FC = () => {
               </p>
             </>}
           </div>
-          {accountName !== null && <button type="button" onClick={() => void logout()} className="flex items-center gap-2 rounded-xl border border-slate-700 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800">
+          {accountName !== null && <button type="button" onClick={() => void logout()} className="flex items-center gap-2 rounded-xl border border-neutral-700 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800">
             <LogOut aria-hidden="true" className="h-4 w-4" />
             Sair da conta
           </button>}
         </div>
         {hasLegacyData && (
-          <div className="mt-4 border-t border-[#232836] pt-4">
+          <div className="mt-4 border-t border-[#383838] pt-4">
             <p className="text-sm text-slate-300">Há estudos salvos neste navegador antes da criação de contas.</p>
             <button type="button" onClick={importLegacyData} className="mt-2 text-sm font-semibold text-brand-300 hover:underline">
               Importar estudos para esta conta
@@ -86,7 +86,7 @@ export const SettingsView: React.FC = () => {
       </section>
 
       {/* Profile & Name Card */}
-      <div className="p-6 rounded-3xl bg-[#11131a] border border-[#232836]">
+      <div className="p-6 rounded-3xl bg-[#222222] border border-[#383838]">
         <div className="flex items-center gap-3 mb-5">
           <div className="w-9 h-9 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center">
             <User className="w-5 h-5" />
@@ -110,7 +110,7 @@ export const SettingsView: React.FC = () => {
               onChange={(e) => setUserName(e.target.value)}
               required
               placeholder="Seu nome"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white focus:outline-none focus:border-brand-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white focus:outline-none focus:border-brand-500"
             />
           </div>
 
@@ -125,7 +125,7 @@ export const SettingsView: React.FC = () => {
               value={dailyGoalMinutes}
               onChange={(e) => setDailyGoalMinutes(parseInt(e.target.value) || 0)}
               required
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#161922] border border-[#282f42] text-sm text-white focus:outline-none focus:border-brand-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#2c2c2c] border border-[#414141] text-sm text-white focus:outline-none focus:border-brand-500"
             />
           </div>
 
@@ -141,7 +141,7 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {/* Theme Selection */}
-      <div className="p-6 rounded-3xl bg-[#11131a] border border-[#232836]">
+      <div className="p-6 rounded-3xl bg-[#222222] border border-[#383838]">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-9 h-9 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center">
             {settings.theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
@@ -159,7 +159,7 @@ export const SettingsView: React.FC = () => {
             className={`p-4 rounded-2xl border text-left flex items-center justify-between transition-all ${
               settings.theme === 'dark'
                 ? 'bg-brand-500/10 border-brand-500 text-white shadow-glow-sm'
-                : 'bg-[#161922] border-[#282f42] text-slate-400 hover:text-white'
+                : 'bg-[#2c2c2c] border-[#414141] text-slate-400 hover:text-white'
             }`}
           >
             <div className="flex items-center gap-3">
@@ -178,7 +178,7 @@ export const SettingsView: React.FC = () => {
             className={`p-4 rounded-2xl border text-left flex items-center justify-between transition-all ${
               settings.theme === 'light'
                 ? 'bg-brand-500/10 border-brand-500 text-white shadow-glow-sm'
-                : 'bg-[#161922] border-[#282f42] text-slate-400 hover:text-white'
+                : 'bg-[#2c2c2c] border-[#414141] text-slate-400 hover:text-white'
             }`}
           >
             <div className="flex items-center gap-3">
@@ -194,7 +194,7 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {/* Export & Backup */}
-      <div className="p-6 rounded-3xl bg-[#11131a] border border-[#232836]">
+      <div className="p-6 rounded-3xl bg-[#222222] border border-[#383838]">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
             <Download className="w-5 h-5" />
@@ -208,7 +208,7 @@ export const SettingsView: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="p-4 rounded-2xl bg-[#161922] border border-[#282f42] flex flex-col justify-between">
+          <div className="p-4 rounded-2xl bg-[#2c2c2c] border border-[#414141] flex flex-col justify-between">
             <div>
               <p className="text-xs font-bold text-white">Planilha CSV</p>
               <p className="text-[11px] text-slate-400 mt-0.5">
@@ -217,14 +217,14 @@ export const SettingsView: React.FC = () => {
             </div>
             <button
               onClick={exportDataCSV}
-              className="mt-4 flex items-center justify-center gap-2 py-2 rounded-xl bg-[#202534] hover:bg-[#282f42] text-white text-xs font-semibold transition-colors"
+              className="mt-4 flex items-center justify-center gap-2 py-2 rounded-xl bg-[#343434] hover:bg-[#414141] text-white text-xs font-semibold transition-colors"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Baixar CSV</span>
             </button>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#161922] border border-[#282f42] flex flex-col justify-between">
+          <div className="p-4 rounded-2xl bg-[#2c2c2c] border border-[#414141] flex flex-col justify-between">
             <div>
               <p className="text-xs font-bold text-white">Backup Completo JSON</p>
               <p className="text-[11px] text-slate-400 mt-0.5">
@@ -285,7 +285,7 @@ export const SettingsView: React.FC = () => {
         <div className="pt-2 flex items-center justify-end gap-3">
           <button
             onClick={() => setShowClearConfirm(false)}
-            className="px-4 py-2 rounded-xl bg-[#1c202c] hover:bg-[#252b3b] text-slate-300 text-xs font-medium"
+            className="px-4 py-2 rounded-xl bg-[#303030] hover:bg-[#3c3c3c] text-slate-300 text-xs font-medium"
           >
             Cancelar
           </button>

@@ -9,17 +9,17 @@
     --surface-card: #ffffff;
     --surface-muted: #f1f5f9;
     --border-main: #e2e8f0;
-    --text-primary: #0f172a;
-    --text-secondary: #334155;
+    --text-primary: #171717;
+    --text-secondary: #414141;
     --text-muted: #64748b;
   }
 
   .dark {
-    --bg-main: #000000;
-    --surface-main: #0c0e14;
-    --surface-card: #11131a;
-    --surface-muted: #161922;
-    --border-main: #232836;
+    --bg-main: #161616;
+    --surface-main: #1b1b1b;
+    --surface-card: #222222;
+    --surface-muted: #2c2c2c;
+    --border-main: #383838;
     --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
@@ -52,13 +52,13 @@
     border-radius: 9999px;
   }
   .dark ::-webkit-scrollbar-thumb {
-    background: #334155;
+    background: #414141;
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
   }
   .dark ::-webkit-scrollbar-thumb:hover {
-    background: #475569;
+    background: #555555;
   }
 }
 
@@ -70,7 +70,7 @@
 }
 
 .dark .glass-panel {
-  background: rgba(17, 19, 26, 0.75);
+  background: rgba(34, 34, 34, 0.75);
 }
 
 /* Card hover lift effect */
@@ -119,13 +119,13 @@
 html:not(.dark) body,
 html.light body {
   background-color: #f8fafc !important;
-  color: #0f172a !important;
+  color: #171717 !important;
 }
 
 html:not(.dark) .min-h-screen,
 html.light .min-h-screen {
   background-color: #f8fafc !important;
-  color: #0f172a !important;
+  color: #171717 !important;
 }
 
 /* Header & Sidebar */
@@ -150,25 +150,25 @@ html.light nav.fixed {
 }
 
 /* Primary Cards */
-html:not(.dark) .bg-\[\#11131a\],
-html.light .bg-\[\#11131a\],
-html:not(.dark) .bg-\[\#0c0e14\],
-html.light .bg-\[\#0c0e14\],
-html:not(.dark) .bg-\[\#0e1017\],
-html.light .bg-\[\#0e1017\],
-html:not(.dark) .bg-\[\#141722\],
-html.light .bg-\[\#141722\],
-html:not(.dark) .bg-\[\#141721\],
-html.light .bg-\[\#141721\],
+html:not(.dark) .bg-\[\#222222\],
+html.light .bg-\[\#222222\],
+html:not(.dark) .bg-\[\#1b1b1b\],
+html.light .bg-\[\#1b1b1b\],
+html:not(.dark) .bg-\[\#1d1d1d\],
+html.light .bg-\[\#1d1d1d\],
+html:not(.dark) .bg-\[\#292929\],
+html.light .bg-\[\#292929\],
+html:not(.dark) .bg-\[\#272727\],
+html.light .bg-\[\#272727\],
 html:not(.dark) .bg-\[\#151322\],
 html.light .bg-\[\#151322\],
-html:not(.dark) .bg-\[\#151724\],
-html.light .bg-\[\#151724\],
+html:not(.dark) .bg-\[\#2a2a2a\],
+html.light .bg-\[\#2a2a2a\],
 html:not(.dark) .bg-\[\#191114\],
 html.light .bg-\[\#191114\] {
   background-color: #ffffff !important;
   border-color: #e2e8f0 !important;
-  color: #0f172a !important;
+  color: #171717 !important;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04) !important;
 }
 
@@ -182,72 +182,72 @@ html.light .bg-gradient-to-b {
 }
 
 /* Sub-panels and pills */
-html:not(.dark) .bg-\[\#161922\],
-html.light .bg-\[\#161922\],
-html:not(.dark) .bg-\[\#1c202c\],
-html.light .bg-\[\#1c202c\],
-html:not(.dark) .bg-\[\#202534\],
-html.light .bg-\[\#202534\],
-html:not(.dark) .bg-\[\#181c28\],
-html.light .bg-\[\#181c28\],
+html:not(.dark) .bg-\[\#2c2c2c\],
+html.light .bg-\[\#2c2c2c\],
+html:not(.dark) .bg-\[\#303030\],
+html.light .bg-\[\#303030\],
+html:not(.dark) .bg-\[\#343434\],
+html.light .bg-\[\#343434\],
+html:not(.dark) .bg-\[\#2e2e2e\],
+html.light .bg-\[\#2e2e2e\],
 html:not(.dark) .bg-\[\#201317\],
 html.light .bg-\[\#201317\] {
   background-color: #f8fafc !important;
   border-color: #e2e8f0 !important;
-  color: #1e293b !important;
+  color: #292929 !important;
 }
 
 /* Hover background */
-html:not(.dark) .hover\:bg-\[\#161922\]:hover,
-html.light .hover\:bg-\[\#161922\]:hover,
-html:not(.dark) .hover\:bg-\[\#1c202c\]:hover,
-html.light .hover\:bg-\[\#1c202c\]:hover,
-html:not(.dark) .hover\:bg-\[\#252b3b\]:hover,
-html.light .hover\:bg-\[\#252b3b\]:hover,
-html:not(.dark) .hover\:bg-\[\#202534\]:hover,
-html.light .hover\:bg-\[\#202534\]:hover {
+html:not(.dark) .hover\:bg-\[\#2c2c2c\]:hover,
+html.light .hover\:bg-\[\#2c2c2c\]:hover,
+html:not(.dark) .hover\:bg-\[\#303030\]:hover,
+html.light .hover\:bg-\[\#303030\]:hover,
+html:not(.dark) .hover\:bg-\[\#3c3c3c\]:hover,
+html.light .hover\:bg-\[\#3c3c3c\]:hover,
+html:not(.dark) .hover\:bg-\[\#343434\]:hover,
+html.light .hover\:bg-\[\#343434\]:hover {
   background-color: #f1f5f9 !important;
 }
 
 /* All borders */
-html:not(.dark) .border-\[\#232836\],
-html.light .border-\[\#232836\],
-html:not(.dark) .border-\[\#202534\],
-html.light .border-\[\#202534\],
-html:not(.dark) .border-\[\#242b3b\],
-html.light .border-\[\#242b3b\],
-html:not(.dark) .border-\[\#282f42\],
-html.light .border-\[\#282f42\],
-html:not(.dark) .border-\[\#2b3346\],
-html.light .border-\[\#2b3346\],
-html:not(.dark) .border-\[\#2d3345\],
-html.light .border-\[\#2d3345\],
-html:not(.dark) .border-\[\#32394c\],
-html.light .border-\[\#32394c\] {
+html:not(.dark) .border-\[\#383838\],
+html.light .border-\[\#383838\],
+html:not(.dark) .border-\[\#343434\],
+html.light .border-\[\#343434\],
+html:not(.dark) .border-\[\#3a3a3a\],
+html.light .border-\[\#3a3a3a\],
+html:not(.dark) .border-\[\#414141\],
+html.light .border-\[\#414141\],
+html:not(.dark) .border-\[\#454545\],
+html.light .border-\[\#454545\],
+html:not(.dark) .border-\[\#464646\],
+html.light .border-\[\#464646\],
+html:not(.dark) .border-\[\#4c4c4c\],
+html.light .border-\[\#4c4c4c\] {
   border-color: #e2e8f0 !important;
 }
 
 /* Typography Hierarchy */
 html:not(.dark) .text-white,
 html.light .text-white {
-  color: #0f172a !important;
+  color: #171717 !important;
 }
 
 html:not(.dark) .text-slate-100,
 html.light .text-slate-100,
 html:not(.dark) .text-slate-200,
 html.light .text-slate-200 {
-  color: #1e293b !important;
+  color: #292929 !important;
 }
 
 html:not(.dark) .text-slate-300,
 html.light .text-slate-300 {
-  color: #334155 !important;
+  color: #414141 !important;
 }
 
 html:not(.dark) .text-slate-400,
 html.light .text-slate-400 {
-  color: #475569 !important;
+  color: #555555 !important;
 }
 
 html:not(.dark) .text-slate-500,
@@ -289,7 +289,7 @@ html:not(.dark) textarea,
 html.light textarea {
   background-color: #ffffff !important;
   border-color: #cbd5e1 !important;
-  color: #0f172a !important;
+  color: #171717 !important;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
 }
 
@@ -322,17 +322,17 @@ html.light .recharts-text {
   fill: #64748b !important;
 }
 
-html:not(.dark) .bg-\[\#0f1118\],
-html.light .bg-\[\#0f1118\] {
+html:not(.dark) .bg-\[\#1e1e1e\],
+html.light .bg-\[\#1e1e1e\] {
   background-color: #ffffff !important;
   border-color: #e2e8f0 !important;
-  color: #0f172a !important;
+  color: #171717 !important;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Heatmap empty cells */
-html:not(.dark) .bg-\[\#161922\].border,
-html.light .bg-\[\#161922\].border {
+html:not(.dark) .bg-\[\#2c2c2c\].border,
+html.light .bg-\[\#2c2c2c\].border {
   background-color: #f1f5f9 !important;
   border-color: #e2e8f0 !important;
 }
@@ -344,6 +344,6 @@ html:not(.dark) .text-7xl.font-black,
 html.light .text-7xl.font-black,
 html:not(.dark) .text-8xl.font-black,
 html.light .text-8xl.font-black {
-  color: #0f172a !important;
+  color: #171717 !important;
   text-shadow: none !important;
 }
