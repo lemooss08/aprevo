@@ -22,7 +22,7 @@ export default {
           950: '#2e1065',
         },
         dark: {
-          bg: '#090a0f',
+          bg: '#000000',
           surface: '#11131a',
           card: '#161922',
           cardHover: '#1c202c',

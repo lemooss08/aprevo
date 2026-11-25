@@ -4,7 +4,7 @@
   "description": "Organização, Evolução e Conhecimento. Plataforma moderna de gestão e acompanhamento de estudos.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#090a0f",
+  "background_color": "#000000",
   "theme_color": "#0c0e14",
   "orientation": "portrait-primary",
   "icons": [

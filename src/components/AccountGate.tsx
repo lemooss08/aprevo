@@ -59,7 +59,7 @@ export function AccountGate({ children }: { children: (user: User | null) => Rea
   if (user) return children(user);
 
   return (
-    <main className="grid min-h-screen place-items-center bg-[#090a0f] px-4 py-10 text-slate-100">
+    <main className="grid min-h-screen place-items-center bg-[#000000] px-4 py-10 text-slate-100">
       <section className="w-full max-w-md rounded-3xl border border-[#282f42] bg-[#11131a] p-6 shadow-xl sm:p-8">
         <div className="mb-7 flex items-center gap-3 text-brand-300">
           <BookOpen aria-hidden="true" className="h-6 w-6" />
