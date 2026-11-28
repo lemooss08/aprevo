@@ -8,6 +8,16 @@
           ".read": "auth != null && auth.uid === $uid",
           ".write": "auth != null && auth.uid === $uid && newData.exists()",
           ".validate": "newData.isString() && newData.val().length <= 5000000"
+        },
+        "profile": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && auth.uid === $uid",
+          "username": {
+            ".validate": "newData.isString() && newData.val().length <= 32"
+          },
+          "email": {
+            ".validate": "newData.isString() && newData.val().length <= 320"
+          }
         }
       }
     }

@@ -518,7 +518,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode; user: User | nul
         resumeTimer,
         finishTimer,
         discardTimer,
-        accountName: user ? accountUsername(user.email) : null,
+        accountName: user ? (user.displayName || accountUsername(user.email)) : null,
         cloudStatus,
         hasLegacyData,
         importLegacyData,
